@@ -6,8 +6,7 @@
   "scripts": {
     "start": "node src/app.js",
     "dev": "nodemon src/app.js",
-    "build:css": "tailwindcss -i ./src/public/css/style.css -o ./src/public/css/output.css --watch",
-    "build": "tailwindcss -i ./src/public/css/style.css -o ./src/public/css/output.css --minify",
+    "build": "echo 'Build completed - using CDN Tailwind CSS'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

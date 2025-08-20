@@ -3,118 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
+    <title>KosmaMedia - Content Creation Subscriptions für alle</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5.0.50/dist/full.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#3B82F6',
-                        secondary: '#10B981',
-                        accent: '#F59E0B'
-                    }
-                }
-            }
+    <style>
+        body {
+            background-color: #ffffff;
         }
-    </script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        .btn-primary-clean {
+            background-color: #000000;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        .btn-primary-clean:hover {
+            background-color: #374151;
+        }
+        .btn-secondary-clean {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        .btn-secondary-clean:hover {
+            background-color: #2563eb;
+        }
+        .card-clean {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .service-item {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .service-item:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+        }
+    </style>
 </head>
-<body>
-    <!-- Navigation -->
-    <div class="navbar bg-base-100 shadow-lg">
-        <div class="navbar-start">
-            <div class="dropdown">
-                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
-                    </svg>
+<body class="bg-white">
+    <!-- Navigation Bar -->
+    <nav class="bg-white border-b border-gray-200 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center border border-gray-300">
+                    <div class="w-6 h-6 bg-black rounded-lg"></div>
                 </div>
-                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-                    <li><a href="#home">Start</a></li>
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="#about">Über uns</a></li>
-                </ul>
+                <span class="text-xl font-bold text-gray-900">KosmaMedia</span>
             </div>
-            <a class="btn btn-ghost text-xl">
-                <i class="fas fa-rocket text-primary mr-2"></i>
-                KosmaMedia
-            </a>
+            
+            <!-- CTA Buttons -->
+            <div class="flex items-center space-x-4">
+                <a href="/auth/login" class="text-gray-600 hover:text-gray-900 transition-colors">Login</a>
+                <a href="#pricing" class="btn-primary-clean">See pricing</a>
+            </div>
         </div>
-        <div class="navbar-center hidden lg:flex">
-            <ul class="menu menu-horizontal px-1">
-                <li><a href="#home">Start</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#about">Über uns</a></li>
-            </ul>
-        </div>
-        <div class="navbar-end">
-            <label class="swap swap-rotate">
-                <input type="checkbox" class="theme-controller" value="dark" />
-                <svg class="swap-on fill-current w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0,0,2H7a1,1,0,0,0,0-2Zm0-8a1,1,0,0,0,0,2H7a1,1,0,0,0,0-2ZM12,2a1,1,0,0,0-1,1V7a1,1,0,0,0,2,0V3A1,1,0,0,0,12,2ZM12,15a1,1,0,0,0-1,1v4a1,1,0,0,0,2,0V16A1,1,0,0,0,12,15ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM19,12a1,1,0,0,0,0-2H17a1,1,0,0,0,0,2ZM19,4a1,1,0,0,0,0-2H17a1,1,0,0,0,0,2ZM12,9a1,1,0,0,0-1,1v4a1,1,0,0,0,2,0V10A1,1,0,0,0,12,9Z"/>
-                </svg>
-                <svg class="swap-off fill-current w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z"/>
-                </svg>
-            </label>
-        </div>
-    </div>
+    </nav>
 
     <!-- Hero Section -->
-    <div class="hero min-h-screen bg-gradient-to-br from-primary/10 to-secondary/10">
-        <div class="hero-content text-center">
-            <div class="max-w-md">
-                <h1 class="text-5xl font-bold text-primary">
-                    <i class="fas fa-rocket mr-4"></i>
-                    Willkommen!
-                </h1>
-                <p class="py-6 text-lg">
-                    <%= message %>
-                </p>
-                <button class="btn btn-primary">
-                    <i class="fas fa-play mr-2"></i>
-                    Los geht's!
-                </button>
+    <section class="py-20 px-6">
+        <div class="max-w-7xl mx-auto text-center">
+            <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+                Content Creation Subscriptions für alle
+            </h1>
+            <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+                Pause or cancel anytime.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#pricing" class="btn-primary-clean">
+                    Start today
+                </a>
+                <a href="#demo" class="btn-secondary-clean">
+                    Join
+                </a>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Features Section -->
-    <section id="features" class="py-16 bg-base-100">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12">Unsere Features</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Feature 1 -->
-                <div class="card text-center">
-                    <div class="text-4xl text-primary mb-4">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-2">Schnell</h3>
-                    <p class="text-gray-600 dark:text-gray-400">
-                        Optimiert für beste Performance und Benutzerfreundlichkeit.
+    <!-- Subtitle Section -->
+    <section class="py-8 px-6 bg-gray-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col lg:flex-row items-center justify-between gap-8">
+                <div class="text-center lg:text-left">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">
+                        KosmaMedia
+                    </h2>
+                    <p class="text-lg text-gray-600">
+                        One subscription to rule them all.
                     </p>
                 </div>
                 
-                <!-- Feature 2 -->
-                <div class="card text-center">
-                    <div class="text-4xl text-secondary mb-4">
-                        <i class="fas fa-shield-alt"></i>
+                <!-- Service Grid (wie Designjoy) -->
+                <div class="service-grid max-w-2xl">
+                    <div class="service-item">
+                        <span class="text-sm font-medium text-gray-700">Social Media</span>
                     </div>
-                    <h3 class="text-xl font-semibold mb-2">Sicher</h3>
-                    <p class="text-gray-600 dark:text-gray-400">
-                        Moderne Sicherheitsstandards für deine Daten.
+                    <div class="service-item">
+                        <span class="text-sm font-medium text-gray-700">Blog Posts</span>
+                    </div>
+                    <div class="service-item">
+                        <span class="text-sm font-medium text-gray-700">Email Marketing</span>
+                    </div>
+                    <div class="service-item">
+                        <span class="text-sm font-medium text-gray-700">Video Scripts</span>
+                    </div>
+                    <div class="service-item">
+                        <span class="text-sm font-medium text-gray-700">Landing Pages</span>
+                    </div>
+                    <div class="service-item">
+                        <span class="text-sm font-medium text-gray-700">Branding</span>
+                    </div>
+                    <div class="service-item">
+                        <span class="text-sm font-medium text-gray-700">Ad Creative</span>
+                    </div>
+                    <div class="service-item">
+                        <span class="text-sm font-medium text-gray-700">Newsletters</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Value Proposition -->
+    <section class="py-20 px-6">
+        <div class="max-w-7xl mx-auto text-center">
+            <h2 class="text-4xl font-bold text-gray-900 mb-8">
+                The way content creation should've been done in the first place
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
+                <!-- Subscribe -->
+                <div class="text-center">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Subscribe</h3>
+                    <p class="text-gray-600">
+                        [PLATZHALTER: Subscribe to a plan & request as many content pieces as you'd like]
                     </p>
                 </div>
                 
-                <!-- Feature 3 -->
-                <div class="card text-center">
-                    <div class="text-4xl text-accent mb-4">
-                        <i class="fas fa-mobile-alt"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-2">Responsiv</h3>
-                    <p class="text-gray-600 dark:text-gray-400">
-                        Funktioniert perfekt auf allen Geräten.
+                <!-- Request -->
+                <div class="text-center">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Request</h3>
+                    <p class="text-gray-600">
+                        [PLATZHALTER: Request whatever you'd like, from social media posts to video scripts]
+                    </p>
+                </div>
+                
+                <!-- Receive -->
+                <div class="text-center">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Receive</h3>
+                    <p class="text-gray-600">
+                        [PLATZHALTER: Receive your content within two business days on average]
                     </p>
                 </div>
             </div>
@@ -122,101 +177,238 @@
     </section>
 
     <!-- About Section -->
-    <section id="about" class="py-16 bg-base-200">
-        <div class="container mx-auto px-4">
-            <div class="max-w-4xl mx-auto text-center">
-                <h2 class="text-3xl font-bold mb-8">Über unser Projekt</h2>
-                <p class="text-lg text-gray-600 dark:text-gray-400 mb-6">
-                    Dies ist eine moderne Webanwendung, die mit Node.js, Express.js, Tailwind CSS und DaisyUI gebaut wurde.
-                    Sie ist darauf ausgelegt, skalierbar zu sein und kann später einfach auf Vercel gehostet werden.
+    <section class="py-20 px-6 bg-gray-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <p class="text-lg text-gray-600 max-w-4xl mx-auto">
+                    [PLATZHALTER: First launched in 2024, KosmaMedia revolutionized the content creation industry with its subscription-based model. To this day, KosmaMedia is run entirely by our team. KosmaMedia doesn't hire extra writers or outsource work—instead, it focuses on delivering top-notch quality to a limited roster of clients at a time.]
                 </p>
-                <div class="stats shadow">
-                    <div class="stat">
-                        <div class="stat-figure text-primary">
-                            <i class="fas fa-code text-3xl"></i>
-                        </div>
-                        <div class="stat-title">Technologien</div>
-                        <div class="stat-value text-primary">4+</div>
-                        <div class="stat-desc">Node.js, Express, Tailwind, DaisyUI</div>
+            </div>
+            
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-gray-900 mb-8">Membership benefits</h2>
+                <h3 class="text-4xl font-bold text-gray-900 mb-8">
+                    It's "you'll never go back" better
+                </h3>
+                <p class="text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
+                    [PLATZHALTER: KosmaMedia replaces unreliable freelancers and expensive agencies for one flat monthly fee, with content delivered so fast you won't want to go anywhere else.]
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Benefit 1 -->
+                <div class="card-clean p-8 text-center">
+                    <h4 class="text-xl font-bold text-gray-900 mb-4">Content Board</h4>
+                    <p class="text-gray-600">
+                        [PLATZHALTER: Easily manage your content queue with a Trello board]
+                    </p>
+                </div>
+                
+                <!-- Benefit 2 -->
+                <div class="card-clean p-8 text-center">
+                    <h4 class="text-xl font-bold text-gray-900 mb-4">Fixed monthly rate</h4>
+                    <p class="text-gray-600">
+                        [PLATZHALTER: No surprises here! Pay the same fixed price each month]
+                    </p>
+                </div>
+                
+                <!-- Benefit 3 -->
+                <div class="card-clean p-8 text-center">
+                    <h4 class="text-xl font-bold text-gray-900 mb-4">Fast delivery</h4>
+                    <p class="text-gray-600">
+                        [PLATZHALTER: Get your content one at a time in just a couple days on average]
+                    </p>
+                </div>
+                
+                <!-- Benefit 4 -->
+                <div class="card-clean p-8 text-center">
+                    <h4 class="text-xl font-bold text-gray-900 mb-4">Top-notch quality</h4>
+                    <p class="text-gray-600">
+                        [PLATZHALTER: Senior content quality at your fingertips, whenever you need it]
+                    </p>
+                </div>
+                
+                <!-- Benefit 5 -->
+                <div class="card-clean p-8 text-center">
+                    <h4 class="text-xl font-bold text-gray-900 mb-4">Flexible and scalable</h4>
+                    <p class="text-gray-600">
+                        [PLATZHALTER: Scale up or down as needed, and pause or cancel at anytime]
+                    </p>
+                </div>
+                
+                <!-- Benefit 6 -->
+                <div class="card-clean p-8 text-center">
+                    <h4 class="text-xl font-bold text-gray-900 mb-4">Unique and all yours</h4>
+                    <p class="text-gray-600">
+                        [PLATZHALTER: Every piece of content is made especially for you and is 100% yours]
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Recent work</h2>
+                <h3 class="text-4xl font-bold text-gray-900 mb-8">
+                    We're talking "Product of the Year" good
+                </h3>
+                <a href="#work" class="btn-secondary-clean">See recent work</a>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="card-clean p-6 text-center">
+                    <h4 class="font-semibold text-gray-900 mb-2">Web design</h4>
+                </div>
+                <div class="card-clean p-6 text-center">
+                    <h4 class="font-semibold text-gray-900 mb-2">Social media</h4>
+                </div>
+                <div class="card-clean p-6 text-center">
+                    <h4 class="font-semibold text-gray-900 mb-2">Email marketing</h4>
+                </div>
+                <div class="card-clean p-6 text-center">
+                    <h4 class="font-semibold text-gray-900 mb-2">Branding</h4>
+                </div>
+            </div>
+            
+            <div class="text-center mt-8">
+                <p class="text-gray-600">+ more</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 px-6 bg-gray-50">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl font-bold text-gray-900 mb-6">
+                Apps, websites, logos & more
+            </h2>
+            <p class="text-xl text-gray-600 mb-8">
+                All the things you need under one roof.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#pricing" class="btn-primary-clean">
+                    PRICING
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">
+                    One subscription, endless possibilities
+                </h2>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="#pricing" class="btn-primary-clean">Start today</a>
+                    <a href="#pricing" class="btn-secondary-clean">Join</a>
+                </div>
+            </div>
+            
+            <div class="max-w-4xl mx-auto">
+                <div class="card-clean p-12 text-center">
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">KosmaMedia</h3>
+                        <h4 class="text-xl font-bold text-gray-900 mb-2">Monthly Club</h4>
+                        <p class="text-gray-600">PAUSE OR CANCEL ANYTIME</p>
                     </div>
                     
-                    <div class="stat">
-                        <div class="stat-figure text-secondary">
-                            <i class="fas fa-rocket text-3xl"></i>
-                        </div>
-                        <div class="stat-title">Performance</div>
-                        <div class="stat-value text-secondary">100%</div>
-                        <div class="stat-desc">Optimiert für Geschwindigkeit</div>
+                    <div class="mb-8">
+                        <span class="text-6xl font-bold text-gray-900">€299</span>
+                        <span class="text-xl text-gray-600">/month</span>
                     </div>
                     
-                    <div class="stat">
-                        <div class="stat-figure text-accent">
-                            <i class="fas fa-mobile-alt text-3xl"></i>
-                        </div>
-                        <div class="stat-title">Responsiv</div>
-                        <div class="stat-value text-accent">✓</div>
-                        <div class="stat-desc">Alle Geräte unterstützt</div>
+                    <ul class="text-left space-y-4 mb-8 max-w-md mx-auto">
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">[PLATZHALTER: One request at a time]</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">[PLATZHALTER: Avg. 48 hour delivery]</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">[PLATZHALTER: Unlimited brands]</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">[PLATZHALTER: Up to 2 users]</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">[PLATZHALTER: Pause or cancel anytime]</span>
+                        </li>
+                    </ul>
+                    
+                    <div class="mb-8">
+                        <span class="text-lg font-bold text-gray-900">Included</span>
+                    </div>
+                    
+                    <a href="/auth/login" class="btn-primary-clean inline-block mb-4">
+                        Join today
+                    </a>
+                    
+                    <div class="space-y-4 text-sm text-gray-500">
+                        <p>Pause anytime</p>
+                        <p>[PLATZHALTER: Temporarily pause your subscription anytime, no sweat]</p>
+                        <p>Try it for a week</p>
+                        <p>[PLATZHALTER: Not loving it after a week? Get 75% back, no questions asked]</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="footer footer-center p-10 bg-base-300 text-base-content">
-        <div>
-            <i class="fas fa-rocket text-primary text-2xl mb-2"></i>
-            <p class="font-bold">
-                KosmaMedia Product 1 <br/>
-                Moderne Webentwicklung
-            </p> 
-            <p>Copyright © 2025 - Alle Rechte vorbehalten</p>
-        </div> 
-        <div>
-            <div class="grid grid-flow-col gap-4">
-                <a href="#" class="link link-hover">
-                    <i class="fab fa-github text-xl"></i>
-                </a>
-                <a href="#" class="link link-hover">
-                    <i class="fab fa-twitter text-xl"></i>
-                </a>
-                <a href="#" class="link link-hover">
-                    <i class="fab fa-linkedin text-xl"></i>
+    <!-- Final CTA Section -->
+    <section class="py-20 px-6">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl font-bold text-gray-900 mb-6">
+                See if KosmaMedia is the right fit for you (it totally is)
+            </h2>
+            <p class="text-xl text-gray-600 mb-8">
+                [PLATZHALTER: Schedule a quick, 15 minute guided tour through KosmaMedia]
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="/auth/login" class="btn-primary-clean">
+                    [PLATZHALTER: Book a call]
                 </a>
             </div>
         </div>
-    </footer>
+    </section>
 
-    <!-- JavaScript -->
-    <script>
-        // Theme Switcher
-        const themeController = document.querySelector('.theme-controller');
-        
-        // Theme aus localStorage laden
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', currentTheme);
-        themeController.checked = currentTheme === 'dark';
-        
-        // Theme wechseln
-        themeController.addEventListener('change', (e) => {
-            const theme = e.target.checked ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('theme', theme);
-        });
-        
-        // Smooth Scrolling für Navigation
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-    </script>
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 px-6">
+        <div class="max-w-7xl mx-auto text-center">
+            <p class="text-gray-400 mb-4">
+                [PLATZHALTER: Headquartered in Munich, Germany]
+            </p>
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                    [PLATZHALTER: Terms of service]
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                    [PLATZHALTER: Privacy Policy]
+                </a>
+            </div>
+            <p class="text-gray-400">
+                [PLATZHALTER: KosmaMedia is experiencing a high volume of bookings, so slots are limited. For faster service, email hello@kosmamedia.de for a same-day response]
+            </p>
+        </div>
+    </footer>
 </body>
 </html>

@@ -1,5 +1,11 @@
 const express = require('express');
 const path = require('path');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+
+// Routen importieren
+const authRoutes = require('./routes/auth');
+const dashboardRoutes = require('./routes/dashboard');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -8,6 +14,19 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Cookie-Parser und Session-Middleware
+app.use(cookieParser());
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'kosmamedia-secret-key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000 // 24 Stunden
+    }
+}));
+
 // Statische Dateien (CSS, JS, Bilder)
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -15,7 +34,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Basis-Route
+// Routen registrieren
+app.use('/auth', authRoutes);
+app.use('/dashboard', dashboardRoutes);
+
+// Landing Page (öffentlich)
 app.get('/', (req, res) => {
     res.render('index', { 
         title: 'KosmaMedia Product 1',
@@ -41,6 +64,9 @@ app.use((req, res) => {
 app.listen(PORT, () => {
     console.log(`🚀 Server läuft auf http://localhost:${PORT}`);
     console.log(`📁 Öffne Cursor und navigiere zu diesem Ordner: ${__dirname}`);
+    console.log(`🏠 Landing Page: http://localhost:${PORT}`);
+    console.log(`🔐 Login: http://localhost:${PORT}/auth/login`);
+    console.log(`📊 Dashboard: http://localhost:${PORT}/dashboard`);
 });
 
 module.exports = app;

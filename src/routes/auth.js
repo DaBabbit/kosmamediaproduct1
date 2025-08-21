@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const supabase = require('../config/supabase');
 const logger = require('../utils/logger');
+const { getAuthUrls } = require('../utils/urlHelper');
 
 // GET /auth/login - Login-Seite anzeigen
 router.get('/login', (req, res) => {
@@ -148,7 +149,7 @@ router.post('/register', async (req, res) => {
             email,
             password,
             options: {
-                emailRedirectTo: `${process.env.BASE_URL || 'https://kosmamediaproduct1-oiac28g0f-david-kosmas-projects.vercel.app'}/auth/confirm`
+                emailRedirectTo: getAuthUrls(req).confirm
             }
         });
 
@@ -207,11 +208,11 @@ router.post('/forgot-password', async (req, res) => {
 
         // Supabase Passwort zurücksetzen
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${process.env.BASE_URL || 'https://kosmamediaproduct1-oiac28g0f-david-kosmas-projects.vercel.app'}/auth/reset-password`
+            redirectTo: getAuthUrls(req).resetPassword
         });
         
         console.log('Passwort-Reset-E-Mail gesendet an:', email);
-        console.log('Redirect-URL:', `${process.env.BASE_URL || 'https://kosmamediaproduct1-oiac28g0f-david-kosmas-projects.vercel.app'}/auth/reset-password`);
+        console.log('Redirect-URL:', getAuthUrls(req).resetPassword);
 
         if (error) {
             console.error('Passwort-Reset-Fehler:', error.message);

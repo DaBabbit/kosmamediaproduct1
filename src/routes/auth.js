@@ -98,34 +98,15 @@ router.post('/register', async (req, res) => {
             return res.redirect('/auth/register?error=Das Passwort muss mindestens 6 Zeichen lang sein');
         }
 
-        // Prüfe zuerst, ob die E-Mail bereits registriert ist
-        // Wir versuchen einen Login mit einem falschen Passwort
-        const { error: checkError } = await supabase.auth.signInWithPassword({
-            email,
-            password: 'dummy-check-password-that-will-fail'
-        });
-        
-        if (checkError) {
-            if (checkError.message.includes('Invalid login credentials')) {
-                // E-Mail existiert nicht -> OK für Registrierung
-            } else if (checkError.message.includes('Email not confirmed')) {
-                // E-Mail existiert, aber nicht bestätigt
-                return res.redirect('/auth/register?error=Diese E-Mail-Adresse ist bereits registriert, aber noch nicht bestätigt. Bitte prüfen Sie Ihr E-Mail-Postfach oder melden Sie sich an.');
-            } else {
-                // Andere Fehler können bedeuten, dass die E-Mail existiert
-                return res.redirect('/auth/register?error=Diese E-Mail-Adresse ist bereits registriert. Möchten Sie sich stattdessen anmelden?&showLogin=true');
-            }
-        } else {
-            // Kein Fehler bedeutet, dass der Login erfolgreich war -> E-Mail existiert bereits
-            return res.redirect('/auth/register?error=Diese E-Mail-Adresse ist bereits registriert. Möchten Sie sich stattdessen anmelden?&showLogin=true');
-        }
+        // Entfernen der problematischen E-Mail-Überprüfung
+        // Supabase wird uns beim signUp mitteilen, ob die E-Mail bereits existiert
 
         // Supabase Registrierung
         const { data, error } = await supabase.auth.signUp({
             email,
             password,
             options: {
-                emailRedirectTo: `${process.env.BASE_URL || 'https://kosmamediaproduct1-67xau8ffi-david-kosmas-projects.vercel.app'}/auth/confirm`
+                emailRedirectTo: `${process.env.BASE_URL || 'https://kosmamediaproduct1-6l5lnzqkx-david-kosmas-projects.vercel.app'}/auth/confirm`
             }
         });
 
@@ -184,11 +165,11 @@ router.post('/forgot-password', async (req, res) => {
 
         // Supabase Passwort zurücksetzen
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${process.env.BASE_URL || 'https://kosmamediaproduct1-67xau8ffi-david-kosmas-projects.vercel.app'}/auth/reset-password`
+            redirectTo: `${process.env.BASE_URL || 'https://kosmamediaproduct1-6l5lnzqkx-david-kosmas-projects.vercel.app'}/auth/reset-password`
         });
         
         console.log('Passwort-Reset-E-Mail gesendet an:', email);
-        console.log('Redirect-URL:', `${process.env.BASE_URL || 'https://kosmamediaproduct1-67xau8ffi-david-kosmas-projects.vercel.app'}/auth/reset-password`);
+        console.log('Redirect-URL:', `${process.env.BASE_URL || 'https://kosmamediaproduct1-6l5lnzqkx-david-kosmas-projects.vercel.app'}/auth/reset-password`);
 
         if (error) {
             console.error('Passwort-Reset-Fehler:', error.message);

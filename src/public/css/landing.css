@@ -172,6 +172,8 @@
   color: var(--color-text-white);
 }
 
+
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .service-grid {

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - KosmaMedia</title>
+    <title>Registrierung - KosmaMedia</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5.0.50/dist/full.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="/css/main.css" rel="stylesheet">
@@ -24,7 +24,7 @@
             <!-- CTA Buttons -->
             <div class="flex items-center gap-4">
                 <a href="/" class="nav-link">Zurück zur Startseite</a>
-                <a href="/" class="btn btn-secondary">Pricing ansehen</a>
+                <a href="/auth/login" class="btn btn-secondary">Bereits angemeldet?</a>
             </div>
         </div>
     </nav>
@@ -34,8 +34,8 @@
         <div class="container-sm">
             <div class="card p-8">
                 <div class="text-center mb-6">
-                    <h3 class="text-2xl font-bold mb-2">Anmelden</h3>
-                    <p class="text-gray-600">Melden Sie sich mit Ihren Zugangsdaten an</p>
+                    <h3 class="text-2xl font-bold mb-2">Konto erstellen</h3>
+                    <p class="text-gray-600">Erstellen Sie Ihr KosmaMedia-Konto</p>
                 </div>
                 
                 <!-- Fehler- und Erfolgsmeldungen -->
@@ -45,48 +45,29 @@
                         <span><%= error %></span>
                     </div>
                     
-                    <!-- Spezielle Aktionen basierend auf Fehlertyp -->
-                    <% if (error.includes('existiert noch nicht')) { %>
+                    <!-- Spezielle Aktion für bereits registrierte E-Mail -->
+                    <% if (error.includes('bereits registriert')) { %>
                         <div class="alert alert-info mb-4">
                             <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                             <span>
-                                <strong>Neu bei KosmaMedia?</strong> 
-                                <a href="/auth/register" class="font-bold text-blue-600 hover:text-blue-700 ml-2">
-                                    Jetzt Konto erstellen →
-                                </a>
-                            </span>
-                        </div>
-                    <% } %>
-                    
-                    <% if (error.includes('E-Mail bestätigen')) { %>
-                        <div class="alert alert-warning mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" /></svg>
-                            <span>
-                                <strong>E-Mail nicht bestätigt?</strong> 
-                                <a href="/auth/resend-confirmation" class="font-bold text-blue-600 hover:text-blue-700 ml-2">
-                                    Bestätigungs-E-Mail erneut senden →
+                                <strong>Bereits ein Konto?</strong> 
+                                <a href="/auth/login" class="font-bold text-blue-600 hover:text-blue-700 ml-2">
+                                    Jetzt anmelden →
                                 </a>
                             </span>
                         </div>
                     <% } %>
                 <% } %>
                 
-                <% if (success && success.includes('E-Mail erfolgreich bestätigt')) { %>
-                    <div class="alert alert-success mb-4" id="success-alert">
+                <% if (success) { %>
+                    <div class="alert alert-success mb-4">
                         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                         <span><%= success %></span>
                     </div>
                 <% } %>
                 
-                <% if (success && !success.includes('E-Mail erfolgreich bestätigt')) { %>
-                    <div class="alert alert-info mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <span><%= success %></span>
-                    </div>
-                <% } %>
-                
-                <!-- Login-Formular -->
-                <form action="/auth/login" method="POST" class="space-y-4">
+                <!-- Registrierungs-Formular -->
+                <form action="/auth/register" method="POST" class="space-y-4">
                     <div class="form-group">
                         <label class="form-label">
                             E-Mail-Adresse
@@ -107,24 +88,38 @@
                         <input 
                             type="password" 
                             name="password" 
-                            placeholder="Ihr Passwort" 
+                            placeholder="Mindestens 6 Zeichen" 
                             class="form-input"
+                            minlength="6"
+                            required
+                        />
+                        <p class="text-sm text-gray-500 mt-1">Das Passwort muss mindestens 6 Zeichen lang sein</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            Passwort bestätigen
+                        </label>
+                        <input 
+                            type="password" 
+                            name="confirmPassword" 
+                            placeholder="Passwort wiederholen" 
+                            class="form-input"
+                            minlength="6"
                             required
                         />
                     </div>
                     
-                    <div class="flex items-center justify-between">
-                        <label class="flex items-center space-x-2">
-                            <input type="checkbox" name="remember" class="checkbox checkbox-sm" />
-                            <span class="text-sm text-gray-600">Angemeldet bleiben</span>
-                        </label>
-                        <a href="/auth/forgot-password" class="text-sm text-blue-600 hover:text-blue-700">
-                            Passwort vergessen?
-                        </a>
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" name="terms" class="checkbox checkbox-sm" required />
+                        <span class="text-sm text-gray-600">
+                            Ich akzeptiere die <a href="/agb" class="text-blue-600 hover:text-blue-700">AGB</a> und 
+                            <a href="/datenschutz" class="text-blue-600 hover:text-blue-700">Datenschutzerklärung</a>
+                        </span>
                     </div>
                     
                     <button type="submit" class="btn btn-primary btn-full">
-                        Anmelden
+                        Konto erstellen
                     </button>
                 </form>
                 
@@ -132,10 +127,10 @@
                 
                 <div class="text-center">
                     <p class="text-gray-600 text-sm mb-4">
-                        Noch kein Konto?
+                        Bereits ein Konto?
                     </p>
-                    <a href="/auth/register" class="btn btn-outline btn-full">
-                        Konto erstellen
+                    <a href="/auth/login" class="btn btn-outline btn-full">
+                        Anmelden
                     </a>
                 </div>
                 
@@ -148,29 +143,6 @@
         </div>
     </div>
 
-    <script>
-        // Auto-hide success alert nach 4 Sekunden
-        document.addEventListener('DOMContentLoaded', function() {
-            const successAlert = document.getElementById('success-alert');
-            if (successAlert) {
-                // Fade-out Animation nach 4 Sekunden
-                setTimeout(() => {
-                    successAlert.style.transition = 'opacity 0.5s ease-out';
-                    successAlert.style.opacity = '0';
-                    
-                    // Element nach Animation entfernen
-                    setTimeout(() => {
-                        successAlert.remove();
-                        // URL ohne success-Parameter aktualisieren
-                        const url = new URL(window.location);
-                        url.searchParams.delete('success');
-                        window.history.replaceState({}, '', url);
-                    }, 500);
-                }, 4000);
-            }
-        });
-    </script>
-    
 
 </body>
 </html>

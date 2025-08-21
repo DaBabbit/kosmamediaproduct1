@@ -2,46 +2,42 @@ const supabase = require('../config/supabase');
 
 const requireAuth = async (req, res, next) => {
     try {
-        const token = req.cookies['sb-access-token'] || req.headers.authorization?.replace('Bearer ', '');
-        
-        if (!token) {
-            // Für Demo-Zwecke: Erstelle Mock-Benutzer
-            req.user = {
-                id: 'mock-user-id',
-                email: 'demo@kosmamedia.com',
-                created_at: new Date().toISOString()
-            };
-            return next();
+        // Prüfe Session
+        if (!req.session.userId) {
+            return res.redirect('/auth/login');
         }
 
-        // Token mit Supabase validieren
-        const { data: { user }, error } = await supabase.auth.getUser(token);
+        // Prüfe Supabase-Token (falls vorhanden)
+        const token = req.cookies['sb-access-token'];
         
-        if (error || !user) {
-            res.clearCookie('sb-access-token');
-            // Für Demo-Zwecke: Erstelle Mock-Benutzer
+        if (token) {
+            try {
+                const { data: { user }, error } = await supabase.auth.getUser(token);
+                
+                if (error || !user) {
+                    res.clearCookie('sb-access-token');
+                    return res.redirect('/auth/login');
+                }
+                
+                req.user = user;
+            } catch (error) {
+                console.error('Token-Validierung Fehler:', error);
+                res.clearCookie('sb-access-token');
+                return res.redirect('/auth/login');
+            }
+        } else {
+            // Verwende Session-Daten
             req.user = {
-                id: 'mock-user-id',
-                email: 'demo@kosmamedia.com',
-                created_at: new Date().toISOString()
+                id: req.session.userId,
+                email: req.session.userEmail
             };
-            return next();
         }
-
-        // Benutzerdaten an Request anhängen
-        req.user = user;
+        
         next();
     } catch (error) {
         console.error('Auth-Middleware Fehler:', error);
-        res.clearCookie('sb-access-token');
-        // Für Demo-Zwecke: Erstelle Mock-Benutzer
-        req.user = {
-            id: 'mock-user-id',
-            email: 'demo@kosmamedia.com',
-            created_at: new Date().toISOString()
-        };
-        next();
+        return res.redirect('/auth/login');
     }
 };
 
-module.exports = { requireAuth };
+module.exports = requireAuth;

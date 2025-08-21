@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const supabase = require('../config/supabase');
+const logger = require('../utils/logger');
 
 // GET /auth/login - Login-Seite anzeigen
 router.get('/login', (req, res) => {
@@ -15,19 +16,34 @@ router.get('/login', (req, res) => {
 router.post('/login', async (req, res) => {
     try {
         const { email, password, remember } = req.body;
+        
+        logger.auth('Login-Versuch gestartet', { email, hasPassword: !!password, remember });
+        logger.debug('Login-Request-Details', { 
+            body: req.body, 
+            headers: req.headers,
+            session: req.session,
+            cookies: req.cookies
+        });
 
         if (!email || !password) {
+            logger.warn('Login fehlgeschlagen: Fehlende Felder', { email, hasPassword: !!password });
             return res.redirect('/auth/login?error=Bitte füllen Sie alle Felder aus');
         }
 
         // Supabase Login
+        logger.auth('Supabase Login-Versuch', { email });
         const { data, error } = await supabase.auth.signInWithPassword({
             email,
             password
         });
 
         if (error) {
-            console.error('Login-Fehler:', error.message);
+            logger.error('Supabase Login-Fehler', { 
+                email, 
+                error: error.message, 
+                errorCode: error.status,
+                fullError: error
+            });
             
             // Bessere Fehlermeldungen basierend auf dem Fehlertyp
             if (error.message.includes('Invalid login credentials') || error.message.includes('Invalid email or password')) {
@@ -41,6 +57,13 @@ router.post('/login', async (req, res) => {
 
         // Erfolgreicher Login
         if (data.user) {
+            logger.auth('Supabase Login erfolgreich', { 
+                userId: data.user.id, 
+                email: data.user.email,
+                emailConfirmed: data.user.email_confirmed_at,
+                createdAt: data.user.created_at
+            });
+
             // Session setzen
             req.session.userId = data.user.id;
             req.session.userEmail = data.user.email;
@@ -48,16 +71,35 @@ router.post('/login', async (req, res) => {
             // Remember-Me-Funktionalität
             if (remember) {
                 req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000; // 30 Tage
+                logger.session('Remember-Me aktiviert', { userId: data.user.id, maxAge: req.session.cookie.maxAge });
             }
 
-            console.log(`✅ Benutzer ${email} erfolgreich angemeldet`);
+            logger.session('Session gesetzt', { 
+                sessionId: req.sessionID,
+                userId: req.session.userId,
+                userEmail: req.session.userEmail,
+                sessionData: req.session
+            });
+
+            logger.redirect('Weiterleitung zum Dashboard', { 
+                from: '/auth/login', 
+                to: '/dashboard',
+                userId: data.user.id,
+                sessionId: req.sessionID
+            });
+
             res.redirect('/dashboard');
         } else {
+            logger.error('Login fehlgeschlagen: Keine User-Daten', { email, data });
             res.redirect('/auth/login?error=Anmeldung fehlgeschlagen');
         }
 
     } catch (error) {
-        console.error('Login-Route Fehler:', error);
+        logger.error('Login-Route unerwarteter Fehler', { 
+            email: req.body.email, 
+            error: error.message,
+            stack: error.stack
+        });
         res.redirect('/auth/login?error=Ein Fehler ist aufgetreten');
     }
 });
@@ -191,12 +233,32 @@ router.get('/confirm', async (req, res) => {
         // Supabase sendet verschiedene Parameter je nach Konfiguration
         const { token_hash, type, access_token, refresh_token } = req.query;
         
-        console.log('E-Mail-Bestätigung Query-Parameter:', req.query);
-        console.log('Alle Bestätigungs-Parameter:', Object.keys(req.query));
+        logger.auth('E-Mail-Bestätigung gestartet', { 
+            query: req.query,
+            headers: req.headers,
+            url: req.url,
+            method: req.method,
+            userAgent: req.get('User-Agent')
+        });
+        
+        logger.debug('E-Mail-Bestätigung Query-Parameter', { 
+            token_hash, 
+            type, 
+            access_token: access_token ? 'PRESENT' : 'MISSING', 
+            refresh_token: refresh_token ? 'PRESENT' : 'MISSING',
+            allParams: Object.keys(req.query),
+            fullQuery: req.query
+        });
         
         // Prüfe verschiedene mögliche Parameter-Kombinationen
         if (token_hash || access_token || refresh_token || type === 'email_confirmation') {
             const confirmToken = token_hash || access_token;
+            
+            logger.auth('OTP-Verifikation gestartet', { 
+                tokenType: token_hash ? 'token_hash' : 'access_token',
+                tokenLength: confirmToken ? confirmToken.length : 0,
+                type
+            });
             
             try {
                 const { data, error } = await supabase.auth.verifyOtp({
@@ -205,27 +267,72 @@ router.get('/confirm', async (req, res) => {
                 });
                 
                 if (error) {
-                    console.error('E-Mail-Bestätigung Fehler:', error.message);
+                    logger.error('OTP-Verifikation fehlgeschlagen', { 
+                        error: error.message,
+                        errorCode: error.status,
+                        tokenType: token_hash ? 'token_hash' : 'access_token',
+                        type,
+                        fullError: error
+                    });
                     return res.redirect('/auth/login?error=E-Mail-Bestätigung fehlgeschlagen: ' + error.message);
                 }
                 
                 if (data.user) {
-                    console.log(`✅ E-Mail für ${data.user.email} erfolgreich bestätigt`);
+                    logger.auth('E-Mail-Bestätigung erfolgreich', { 
+                        userId: data.user.id,
+                        email: data.user.email,
+                        emailConfirmed: data.user.email_confirmed_at,
+                        createdAt: data.user.created_at,
+                        lastSignIn: data.user.last_sign_in_at
+                    });
+                    
+                    logger.redirect('Weiterleitung nach E-Mail-Bestätigung', { 
+                        from: '/auth/confirm', 
+                        to: '/auth/login?success=E-Mail erfolgreich bestätigt! Sie können sich jetzt anmelden.',
+                        userId: data.user.id
+                    });
+                    
                     res.redirect('/auth/login?success=E-Mail erfolgreich bestätigt! Sie können sich jetzt anmelden.');
                 } else {
+                    logger.error('E-Mail-Bestätigung fehlgeschlagen: Keine User-Daten', { 
+                        data, 
+                        tokenType: token_hash ? 'token_hash' : 'access_token',
+                        type
+                    });
                     res.redirect('/auth/login?error=E-Mail-Bestätigung fehlgeschlagen');
                 }
             } catch (verifyError) {
-                console.error('OTP-Verifikation Fehler:', verifyError);
+                logger.error('OTP-Verifikation unerwarteter Fehler', { 
+                    error: verifyError.message,
+                    stack: verifyError.stack,
+                    tokenType: token_hash ? 'token_hash' : 'access_token',
+                    type
+                });
                 res.redirect('/auth/login?error=E-Mail-Bestätigung fehlgeschlagen');
             }
         } else {
-            console.log('Bestätigungsparameter:', req.query);
+            logger.warn('E-Mail-Bestätigung: Keine gültigen Parameter', { 
+                query: req.query,
+                headers: req.headers,
+                url: req.url
+            });
+            
+            logger.redirect('Weiterleitung ohne Parameter', { 
+                from: '/auth/confirm', 
+                to: '/auth/login?success=E-Mail-Bestätigung erfolgreich! Sie können sich jetzt anmelden.',
+                reason: 'Keine gültigen Parameter'
+            });
+            
             // Wenn keine spezifischen Parameter vorhanden sind, zur Login-Seite weiterleiten
-            res.redirect('/auth/login?success=E-Mail erfolgreich bestätigt! Sie können sich jetzt anmelden.');
+            res.redirect('/auth/login?success=E-Mail-Bestätigung erfolgreich! Sie können sich jetzt anmelden.');
         }
     } catch (error) {
-        console.error('E-Mail-Bestätigung Route Fehler:', error);
+        logger.error('E-Mail-Bestätigung Route unerwarteter Fehler', { 
+            error: error.message,
+            stack: error.stack,
+            query: req.query,
+            url: req.url
+        });
         res.redirect('/auth/login?error=Ein Fehler ist aufgetreten');
     }
 });

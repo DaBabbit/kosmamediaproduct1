@@ -6,91 +6,43 @@
     <title>KosmaMedia - Content Creation Subscriptions für alle</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5.0.50/dist/full.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            background-color: #ffffff;
-        }
-        .btn-primary-clean {
-            background-color: #000000;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 24px;
-            font-weight: 500;
-            transition: background-color 0.2s;
-        }
-        .btn-primary-clean:hover {
-            background-color: #374151;
-        }
-        .btn-secondary-clean {
-            background-color: #3b82f6;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 24px;
-            font-weight: 500;
-            transition: background-color 0.2s;
-        }
-        .btn-secondary-clean:hover {
-            background-color: #2563eb;
-        }
-        .card-clean {
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-        }
-        .service-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-        .service-item {
-            background: #f8fafc;
-            padding: 1rem;
-            border-radius: 8px;
-            text-align: center;
-            transition: all 0.2s;
-        }
-        .service-item:hover {
-            background: #e2e8f0;
-            transform: translateY(-2px);
-        }
-    </style>
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/landing.css" rel="stylesheet">
 </head>
-<body class="bg-white">
+<body>
     <!-- Navigation Bar -->
-    <nav class="bg-white border-b border-gray-200 px-6 py-4">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <nav class="navbar px-6 py-4">
+        <div class="container-xl flex items-center justify-between">
             <!-- Logo -->
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center border border-gray-300">
-                    <div class="w-6 h-6 bg-black rounded-lg"></div>
+            <div class="logo">
+                <div class="logo-icon">
+                    <div class="logo-icon-inner"></div>
                 </div>
-                <span class="text-xl font-bold text-gray-900">KosmaMedia</span>
+                <span class="text-xl font-bold">KosmaMedia</span>
             </div>
             
             <!-- CTA Buttons -->
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center gap-4">
                 <a href="/auth/login" class="text-gray-600 hover:text-gray-900 transition-colors">Login</a>
-                <a href="#pricing" class="btn-primary-clean">See pricing</a>
+                <a href="#pricing" class="btn btn-primary">See pricing</a>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="py-20 px-6">
-        <div class="max-w-7xl mx-auto text-center">
-            <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+    <section class="hero-section section">
+        <div class="container-xl text-center">
+            <h1 class="fade-in-up">
                 Content Creation Subscriptions für alle
             </h1>
             <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
                 Pause or cancel anytime.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#pricing" class="btn-primary-clean">
+                <a href="#pricing" class="btn btn-primary btn-lg">
                     Start today
                 </a>
-                <a href="#demo" class="btn-secondary-clean">
+                <a href="#demo" class="btn btn-secondary btn-lg">
                     Join
                 </a>
             </div>
@@ -98,11 +50,11 @@
     </section>
 
     <!-- Subtitle Section -->
-    <section class="py-8 px-6 bg-gray-50">
-        <div class="max-w-7xl mx-auto">
+    <section class="section section-alt py-8">
+        <div class="container-xl">
             <div class="flex flex-col lg:flex-row items-center justify-between gap-8">
                 <div class="text-center lg:text-left">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4">
+                    <h2 class="text-2xl font-bold mb-4">
                         KosmaMedia
                     </h2>
                     <p class="text-lg text-gray-600">
@@ -110,31 +62,31 @@
                     </p>
                 </div>
                 
-                <!-- Service Grid (wie Designjoy) -->
-                <div class="service-grid max-w-2xl">
+                <!-- Service Grid -->
+                <div class="service-grid max-w-2xl stagger-children">
                     <div class="service-item">
-                        <span class="text-sm font-medium text-gray-700">Social Media</span>
+                        <span class="text-sm font-medium">Social Media</span>
                     </div>
                     <div class="service-item">
-                        <span class="text-sm font-medium text-gray-700">Blog Posts</span>
+                        <span class="text-sm font-medium">Blog Posts</span>
                     </div>
                     <div class="service-item">
-                        <span class="text-sm font-medium text-gray-700">Email Marketing</span>
+                        <span class="text-sm font-medium">Email Marketing</span>
                     </div>
                     <div class="service-item">
-                        <span class="text-sm font-medium text-gray-700">Video Scripts</span>
+                        <span class="text-sm font-medium">Video Scripts</span>
                     </div>
                     <div class="service-item">
-                        <span class="text-sm font-medium text-gray-700">Landing Pages</span>
+                        <span class="text-sm font-medium">Landing Pages</span>
                     </div>
                     <div class="service-item">
-                        <span class="text-sm font-medium text-gray-700">Branding</span>
+                        <span class="text-sm font-medium">Branding</span>
                     </div>
                     <div class="service-item">
-                        <span class="text-sm font-medium text-gray-700">Ad Creative</span>
+                        <span class="text-sm font-medium">Ad Creative</span>
                     </div>
                     <div class="service-item">
-                        <span class="text-sm font-medium text-gray-700">Newsletters</span>
+                        <span class="text-sm font-medium">Newsletters</span>
                     </div>
                 </div>
             </div>
@@ -142,16 +94,16 @@
     </section>
 
     <!-- Main Value Proposition -->
-    <section class="py-20 px-6">
-        <div class="max-w-7xl mx-auto text-center">
-            <h2 class="text-4xl font-bold text-gray-900 mb-8">
+    <section class="section">
+        <div class="container-xl text-center">
+            <h2 class="fade-in-up">
                 The way content creation should've been done in the first place
             </h2>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto stagger-children">
                 <!-- Subscribe -->
                 <div class="text-center">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Subscribe</h3>
+                    <h3 class="text-2xl font-bold mb-4">Subscribe</h3>
                     <p class="text-gray-600">
                         [PLATZHALTER: Subscribe to a plan & request as many content pieces as you'd like]
                     </p>
@@ -159,7 +111,7 @@
                 
                 <!-- Request -->
                 <div class="text-center">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Request</h3>
+                    <h3 class="text-2xl font-bold mb-4">Request</h3>
                     <p class="text-gray-600">
                         [PLATZHALTER: Request whatever you'd like, from social media posts to video scripts]
                     </p>
@@ -167,7 +119,7 @@
                 
                 <!-- Receive -->
                 <div class="text-center">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Receive</h3>
+                    <h3 class="text-2xl font-bold mb-4">Receive</h3>
                     <p class="text-gray-600">
                         [PLATZHALTER: Receive your content within two business days on average]
                     </p>
@@ -177,8 +129,8 @@
     </section>
 
     <!-- About Section -->
-    <section class="py-20 px-6 bg-gray-50">
-        <div class="max-w-7xl mx-auto">
+    <section class="section section-alt">
+        <div class="container-xl">
             <div class="text-center mb-16">
                 <p class="text-lg text-gray-600 max-w-4xl mx-auto">
                     [PLATZHALTER: First launched in 2024, KosmaMedia revolutionized the content creation industry with its subscription-based model. To this day, KosmaMedia is run entirely by our team. KosmaMedia doesn't hire extra writers or outsource work—instead, it focuses on delivering top-notch quality to a limited roster of clients at a time.]
@@ -186,8 +138,8 @@
             </div>
             
             <div class="text-center">
-                <h2 class="text-3xl font-bold text-gray-900 mb-8">Membership benefits</h2>
-                <h3 class="text-4xl font-bold text-gray-900 mb-8">
+                <h2 class="text-3xl font-bold mb-8">Membership benefits</h2>
+                <h3 class="text-4xl font-bold mb-8">
                     It's "you'll never go back" better
                 </h3>
                 <p class="text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
@@ -195,50 +147,50 @@
                 </p>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-children">
                 <!-- Benefit 1 -->
-                <div class="card-clean p-8 text-center">
-                    <h4 class="text-xl font-bold text-gray-900 mb-4">Content Board</h4>
+                <div class="feature-card">
+                    <h4 class="text-xl font-bold mb-4">Content Board</h4>
                     <p class="text-gray-600">
                         [PLATZHALTER: Easily manage your content queue with a Trello board]
                     </p>
                 </div>
                 
                 <!-- Benefit 2 -->
-                <div class="card-clean p-8 text-center">
-                    <h4 class="text-xl font-bold text-gray-900 mb-4">Fixed monthly rate</h4>
+                <div class="feature-card">
+                    <h4 class="text-xl font-bold mb-4">Fixed monthly rate</h4>
                     <p class="text-gray-600">
                         [PLATZHALTER: No surprises here! Pay the same fixed price each month]
                     </p>
                 </div>
                 
                 <!-- Benefit 3 -->
-                <div class="card-clean p-8 text-center">
-                    <h4 class="text-xl font-bold text-gray-900 mb-4">Fast delivery</h4>
+                <div class="feature-card">
+                    <h4 class="text-xl font-bold mb-4">Fast delivery</h4>
                     <p class="text-gray-600">
                         [PLATZHALTER: Get your content one at a time in just a couple days on average]
                     </p>
                 </div>
                 
                 <!-- Benefit 4 -->
-                <div class="card-clean p-8 text-center">
-                    <h4 class="text-xl font-bold text-gray-900 mb-4">Top-notch quality</h4>
+                <div class="feature-card">
+                    <h4 class="text-xl font-bold mb-4">Top-notch quality</h4>
                     <p class="text-gray-600">
                         [PLATZHALTER: Senior content quality at your fingertips, whenever you need it]
                     </p>
                 </div>
                 
                 <!-- Benefit 5 -->
-                <div class="card-clean p-8 text-center">
-                    <h4 class="text-xl font-bold text-gray-900 mb-4">Flexible and scalable</h4>
+                <div class="feature-card">
+                    <h4 class="text-xl font-bold mb-4">Flexible and scalable</h4>
                     <p class="text-gray-600">
                         [PLATZHALTER: Scale up or down as needed, and pause or cancel at anytime]
                     </p>
                 </div>
                 
                 <!-- Benefit 6 -->
-                <div class="card-clean p-8 text-center">
-                    <h4 class="text-xl font-bold text-gray-900 mb-4">Unique and all yours</h4>
+                <div class="feature-card">
+                    <h4 class="text-xl font-bold mb-4">Unique and all yours</h4>
                     <p class="text-gray-600">
                         [PLATZHALTER: Every piece of content is made especially for you and is 100% yours]
                     </p>
@@ -248,28 +200,28 @@
     </section>
 
     <!-- Testimonials Section -->
-    <section class="py-20 px-6">
-        <div class="max-w-7xl mx-auto">
+    <section class="section">
+        <div class="container-xl">
             <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">Recent work</h2>
-                <h3 class="text-4xl font-bold text-gray-900 mb-8">
+                <h2 class="text-3xl font-bold mb-4">Recent work</h2>
+                <h3 class="text-4xl font-bold mb-8">
                     We're talking "Product of the Year" good
                 </h3>
-                <a href="#work" class="btn-secondary-clean">See recent work</a>
+                <a href="#work" class="btn btn-secondary">See recent work</a>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="card-clean p-6 text-center">
-                    <h4 class="font-semibold text-gray-900 mb-2">Web design</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 stagger-children">
+                <div class="testimonial-card">
+                    <h4 class="font-semibold mb-2">Web design</h4>
                 </div>
-                <div class="card-clean p-6 text-center">
-                    <h4 class="font-semibold text-gray-900 mb-2">Social media</h4>
+                <div class="testimonial-card">
+                    <h4 class="font-semibold mb-2">Social media</h4>
                 </div>
-                <div class="card-clean p-6 text-center">
-                    <h4 class="font-semibold text-gray-900 mb-2">Email marketing</h4>
+                <div class="testimonial-card">
+                    <h4 class="font-semibold mb-2">Email marketing</h4>
                 </div>
-                <div class="card-clean p-6 text-center">
-                    <h4 class="font-semibold text-gray-900 mb-2">Branding</h4>
+                <div class="testimonial-card">
+                    <h4 class="font-semibold mb-2">Branding</h4>
                 </div>
             </div>
             
@@ -280,16 +232,16 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="py-20 px-6 bg-gray-50">
-        <div class="max-w-4xl mx-auto text-center">
-            <h2 class="text-4xl font-bold text-gray-900 mb-6">
+    <section class="section section-alt">
+        <div class="container-sm text-center">
+            <h2 class="text-4xl font-bold mb-6">
                 Apps, websites, logos & more
             </h2>
             <p class="text-xl text-gray-600 mb-8">
                 All the things you need under one roof.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#pricing" class="btn-primary-clean">
+                <a href="#pricing" class="btn btn-primary">
                     PRICING
                 </a>
             </div>
@@ -297,28 +249,28 @@
     </section>
 
     <!-- Pricing Section -->
-    <section id="pricing" class="py-20 px-6">
-        <div class="max-w-7xl mx-auto">
+    <section id="pricing" class="section">
+        <div class="container-xl">
             <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-gray-900 mb-4">
+                <h2 class="text-4xl font-bold mb-4">
                     One subscription, endless possibilities
                 </h2>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="#pricing" class="btn-primary-clean">Start today</a>
-                    <a href="#pricing" class="btn-secondary-clean">Join</a>
+                    <a href="#pricing" class="btn btn-primary">Start today</a>
+                    <a href="#pricing" class="btn btn-secondary">Join</a>
                 </div>
             </div>
             
             <div class="max-w-4xl mx-auto">
-                <div class="card-clean p-12 text-center">
+                <div class="pricing-card p-12 text-center">
                     <div class="mb-8">
-                        <h3 class="text-2xl font-bold text-gray-900 mb-2">KosmaMedia</h3>
-                        <h4 class="text-xl font-bold text-gray-900 mb-2">Monthly Club</h4>
+                        <h3 class="text-2xl font-bold mb-2">KosmaMedia</h3>
+                        <h4 class="text-xl font-bold mb-2">Monthly Club</h4>
                         <p class="text-gray-600">PAUSE OR CANCEL ANYTIME</p>
                     </div>
                     
                     <div class="mb-8">
-                        <span class="text-6xl font-bold text-gray-900">€299</span>
+                        <span class="text-6xl font-bold">€299</span>
                         <span class="text-xl text-gray-600">/month</span>
                     </div>
                     
@@ -356,10 +308,10 @@
                     </ul>
                     
                     <div class="mb-8">
-                        <span class="text-lg font-bold text-gray-900">Included</span>
+                        <span class="text-lg font-bold">Included</span>
                     </div>
                     
-                    <a href="/auth/login" class="btn-primary-clean inline-block mb-4">
+                    <a href="/auth/login" class="btn btn-primary btn-lg mb-4">
                         Join today
                     </a>
                     
@@ -375,16 +327,16 @@
     </section>
 
     <!-- Final CTA Section -->
-    <section class="py-20 px-6">
-        <div class="max-w-4xl mx-auto text-center">
-            <h2 class="text-4xl font-bold text-gray-900 mb-6">
+    <section class="section">
+        <div class="container-sm text-center">
+            <h2 class="text-4xl font-bold mb-6">
                 See if KosmaMedia is the right fit for you (it totally is)
             </h2>
             <p class="text-xl text-gray-600 mb-8">
                 [PLATZHALTER: Schedule a quick, 15 minute guided tour through KosmaMedia]
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="/auth/login" class="btn-primary-clean">
+                <a href="/auth/login" class="btn btn-primary">
                     [PLATZHALTER: Book a call]
                 </a>
             </div>
@@ -392,8 +344,8 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12 px-6">
-        <div class="max-w-7xl mx-auto text-center">
+    <footer class="footer py-12 px-6">
+        <div class="container-xl text-center">
             <p class="text-gray-400 mb-4">
                 [PLATZHALTER: Headquartered in Munich, Germany]
             </p>

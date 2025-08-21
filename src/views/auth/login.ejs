@@ -6,67 +6,34 @@
     <title><%= title %> - KosmaMedia</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5.0.50/dist/full.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            background-color: #ffffff;
-        }
-        .btn-primary-clean {
-            background-color: #3b82f6;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 24px;
-            font-weight: 500;
-            transition: background-color 0.2s;
-        }
-        .btn-primary-clean:hover {
-            background-color: #2563eb;
-        }
-        .btn-secondary-clean {
-            background-color: #000000;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 24px;
-            font-weight: 500;
-            transition: background-color 0.2s;
-        }
-        .btn-secondary-clean:hover {
-            background-color: #374151;
-        }
-        .card-clean {
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-        }
-    </style>
+    <link href="/css/main.css" rel="stylesheet">
 </head>
-<body class="bg-white">
+<body>
     <!-- Navigation Bar -->
-    <nav class="bg-white border-b border-gray-200 px-6 py-4">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <nav class="navbar px-6 py-4">
+        <div class="container-xl flex items-center justify-between">
             <!-- Logo -->
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center border border-gray-300">
-                    <div class="w-6 h-6 bg-black rounded-lg"></div>
+            <div class="logo">
+                <div class="logo-icon">
+                    <div class="logo-icon-inner"></div>
                 </div>
-                <span class="text-xl font-bold text-gray-900">KosmaMedia</span>
+                <span class="text-xl font-bold">KosmaMedia</span>
             </div>
             
             <!-- CTA Buttons -->
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center gap-4">
                 <a href="/" class="text-gray-600 hover:text-gray-900 transition-colors">Zurück zur Startseite</a>
-                <a href="/" class="btn-primary-clean">Pricing ansehen</a>
+                <a href="/" class="btn btn-primary">Pricing ansehen</a>
             </div>
         </div>
     </nav>
 
     <!-- Main Content -->
     <div class="min-h-screen flex items-center justify-center py-12 px-6">
-        <div class="max-w-md w-full">
-            <div class="card-clean p-8">
+        <div class="container-sm">
+            <div class="card p-8">
                 <div class="text-center mb-6">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Anmelden</h3>
+                    <h3 class="text-2xl font-bold mb-2">Anmelden</h3>
                     <p class="text-gray-600">Melden Sie sich mit Magic-Link an</p>
                 </div>
                 
@@ -87,20 +54,20 @@
                 
                 <!-- Login-Formular -->
                 <form action="/auth/login" method="POST" class="space-y-4">
-                    <div class="form-control">
-                        <label class="label">
-                            <span class="label-text text-gray-700">E-Mail-Adresse</span>
+                    <div class="form-group">
+                        <label class="form-label">
+                            E-Mail-Adresse
                         </label>
                         <input 
                             type="email" 
                             name="email" 
                             placeholder="ihre@email.com" 
-                            class="input input-bordered w-full bg-white border-gray-300 text-gray-900 placeholder-gray-500"
+                            class="form-input"
                             required
                         />
                     </div>
                     
-                    <button type="submit" class="btn-primary-clean w-full">
+                    <button type="submit" class="btn btn-primary btn-full">
                         Magic-Link senden
                     </button>
                 </form>

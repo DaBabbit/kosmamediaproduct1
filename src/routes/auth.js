@@ -106,7 +106,7 @@ router.post('/register', async (req, res) => {
             email,
             password,
             options: {
-                emailRedirectTo: `${process.env.BASE_URL || 'https://kosmamediaproduct1-pie8j114w-david-kosmas-projects.vercel.app'}/auth/confirm`
+                emailRedirectTo: `${process.env.BASE_URL || 'https://kosmamediaproduct1-oiac28g0f-david-kosmas-projects.vercel.app'}/auth/confirm`
             }
         });
 
@@ -165,11 +165,11 @@ router.post('/forgot-password', async (req, res) => {
 
         // Supabase Passwort zurücksetzen
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${process.env.BASE_URL || 'https://kosmamediaproduct1-pie8j114w-david-kosmas-projects.vercel.app'}/auth/reset-password`
+            redirectTo: `${process.env.BASE_URL || 'https://kosmamediaproduct1-oiac28g0f-david-kosmas-projects.vercel.app'}/auth/reset-password`
         });
         
         console.log('Passwort-Reset-E-Mail gesendet an:', email);
-        console.log('Redirect-URL:', `${process.env.BASE_URL || 'https://kosmamediaproduct1-pie8j114w-david-kosmas-projects.vercel.app'}/auth/reset-password`);
+        console.log('Redirect-URL:', `${process.env.BASE_URL || 'https://kosmamediaproduct1-oiac28g0f-david-kosmas-projects.vercel.app'}/auth/reset-password`);
 
         if (error) {
             console.error('Passwort-Reset-Fehler:', error.message);
@@ -221,7 +221,7 @@ router.get('/confirm', async (req, res) => {
             }
         } else {
             console.log('Bestätigungsparameter:', req.query);
-            // Da die E-Mail-Bestätigung funktioniert, leiten wir direkt zur Login-Seite weiter
+            // Wenn keine spezifischen Parameter vorhanden sind, zur Login-Seite weiterleiten
             res.redirect('/auth/login?success=E-Mail erfolgreich bestätigt! Sie können sich jetzt anmelden.');
         }
     } catch (error) {

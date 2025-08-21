@@ -188,7 +188,7 @@ router.post('/forgot-password', async (req, res) => {
         });
         
         console.log('Passwort-Reset-E-Mail gesendet an:', email);
-        console.log('Redirect-URL:', `${req.protocol}://${req.get('host')}/auth/reset-password`);
+        console.log('Redirect-URL:', `${process.env.BASE_URL || 'https://kosmamediaproduct1-ntu7tvoyq-david-kosmas-projects.vercel.app'}/auth/reset-password`);
 
         if (error) {
             console.error('Passwort-Reset-Fehler:', error.message);

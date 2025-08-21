@@ -8,8 +8,17 @@ class Logger {
     }
 
     ensureLogDirectory() {
+        // In Vercel/Serverless-Umgebung kein Dateisystem-Zugriff
+        if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+            return;
+        }
+        
         if (!fs.existsSync(this.logDir)) {
-            fs.mkdirSync(this.logDir, { recursive: true });
+            try {
+                fs.mkdirSync(this.logDir, { recursive: true });
+            } catch (error) {
+                console.error('Fehler beim Erstellen des Log-Verzeichnisses:', error);
+            }
         }
     }
 
@@ -21,12 +30,18 @@ class Logger {
             message,
             data,
             url: process.env.BASE_URL || 'localhost',
-            environment: process.env.NODE_ENV || 'development'
+            environment: process.env.NODE_ENV || 'development',
+            vercel: !!process.env.VERCEL
         };
         return JSON.stringify(logEntry) + '\n';
     }
 
     writeToFile(level, message, data = null) {
+        // In Vercel/Serverless-Umgebung nur Console-Logging
+        if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+            return;
+        }
+        
         try {
             const logFile = path.join(this.logDir, `${level}.log`);
             const logEntry = this.formatMessage(level, message, data);

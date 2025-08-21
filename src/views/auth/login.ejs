@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %> - KosmaMedia</title>
+    <title>Login - KosmaMedia</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5.0.50/dist/full.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="/css/main.css" rel="stylesheet">
@@ -22,8 +22,8 @@
             
             <!-- CTA Buttons -->
             <div class="flex items-center gap-4">
-                <a href="/" class="text-gray-600 hover:text-gray-900 transition-colors">Zurück zur Startseite</a>
-                <a href="/" class="btn btn-primary">Pricing ansehen</a>
+                <a href="/" class="nav-link">Zurück zur Startseite</a>
+                <a href="/" class="btn btn-secondary">Pricing ansehen</a>
             </div>
         </div>
     </nav>
@@ -34,7 +34,7 @@
             <div class="card p-8">
                 <div class="text-center mb-6">
                     <h3 class="text-2xl font-bold mb-2">Anmelden</h3>
-                    <p class="text-gray-600">Melden Sie sich mit Magic-Link an</p>
+                    <p class="text-gray-600">Melden Sie sich mit Ihren Zugangsdaten an</p>
                 </div>
                 
                 <!-- Fehler- und Erfolgsmeldungen -->
@@ -67,14 +67,46 @@
                         />
                     </div>
                     
+                    <div class="form-group">
+                        <label class="form-label">
+                            Passwort
+                        </label>
+                        <input 
+                            type="password" 
+                            name="password" 
+                            placeholder="Ihr Passwort" 
+                            class="form-input"
+                            required
+                        />
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="remember" class="checkbox checkbox-sm" />
+                            <span class="text-sm text-gray-600">Angemeldet bleiben</span>
+                        </label>
+                        <a href="/auth/forgot-password" class="text-sm text-blue-600 hover:text-blue-700">
+                            Passwort vergessen?
+                        </a>
+                    </div>
+                    
                     <button type="submit" class="btn btn-primary btn-full">
-                        Magic-Link senden
+                        Anmelden
                     </button>
                 </form>
                 
                 <div class="divider text-gray-400">oder</div>
                 
                 <div class="text-center">
+                    <p class="text-gray-600 text-sm mb-4">
+                        Noch kein Konto?
+                    </p>
+                    <a href="/auth/register" class="btn btn-outline btn-full">
+                        Konto erstellen
+                    </a>
+                </div>
+                
+                <div class="text-center mt-6">
                     <p class="text-gray-600 text-sm">
                         <a href="/" class="text-blue-600 hover:text-blue-700 font-medium">Zurück zur Startseite</a>
                     </p>

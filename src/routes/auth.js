@@ -1,74 +1,146 @@
 const express = require('express');
-const supabase = require('../config/supabase');
 const router = express.Router();
+const supabase = require('../config/supabase');
 
-// Login-Seite anzeigen
+// GET /auth/login - Login-Seite anzeigen
 router.get('/login', (req, res) => {
-    res.render('auth/login', { 
-        title: 'Anmelden',
+    res.render('auth/login', {
+        title: 'Login',
         error: req.query.error,
         success: req.query.success
     });
 });
 
-// Magic-Link versenden
+// POST /auth/login - Login-Verarbeitung
 router.post('/login', async (req, res) => {
     try {
-        const { email } = req.body;
-        
-        if (!email) {
-            return res.redirect('/auth/login?error=Email ist erforderlich');
+        const { email, password, remember } = req.body;
+
+        if (!email || !password) {
+            return res.redirect('/auth/login?error=Bitte füllen Sie alle Felder aus');
         }
 
-        // Für Demo-Zwecke: Simuliere erfolgreichen Magic-Link-Versand
-        console.log(`Demo: Magic-Link würde an ${email} gesendet werden`);
-        
-        // Simuliere Verzögerung
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        res.redirect('/auth/login?success=Magic-Link wurde an Ihre E-Mail gesendet (Demo-Modus)');
-    } catch (error) {
-        console.error('Login-Fehler:', error);
-        res.redirect('/auth/login?error=Ein unerwarteter Fehler ist aufgetreten');
-    }
-});
-
-// Magic-Link Callback verarbeiten
-router.get('/callback', async (req, res) => {
-    try {
-        const { access_token, refresh_token } = req.query;
-        
-        if (!access_token) {
-            return res.redirect('/auth/login?error=Ungültiger Magic-Link');
-        }
-
-        // Token in Cookies setzen
-        res.cookie('sb-access-token', access_token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 Tage
+        // Supabase Login
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password
         });
 
-        if (refresh_token) {
-            res.cookie('sb-refresh-token', refresh_token, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                maxAge: 30 * 24 * 60 * 60 * 1000 // 30 Tage
-            });
+        if (error) {
+            console.error('Login-Fehler:', error.message);
+            return res.redirect('/auth/login?error=Ungültige Anmeldedaten');
         }
 
-        res.redirect('/dashboard');
+        // Erfolgreicher Login
+        if (data.user) {
+            // Session setzen
+            req.session.userId = data.user.id;
+            req.session.userEmail = data.user.email;
+            
+            // Remember-Me-Funktionalität
+            if (remember) {
+                req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000; // 30 Tage
+            }
+
+            console.log(`✅ Benutzer ${email} erfolgreich angemeldet`);
+            res.redirect('/dashboard');
+        } else {
+            res.redirect('/auth/login?error=Anmeldung fehlgeschlagen');
+        }
+
     } catch (error) {
-        console.error('Callback-Fehler:', error);
-        res.redirect('/auth/login?error=Fehler bei der Anmeldung');
+        console.error('Login-Route Fehler:', error);
+        res.redirect('/auth/login?error=Ein Fehler ist aufgetreten');
     }
 });
 
-// Logout
-router.post('/logout', (req, res) => {
-    res.clearCookie('sb-access-token');
-    res.clearCookie('sb-refresh-token');
-    res.redirect('/auth/login');
+// GET /auth/logout - Logout
+router.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Logout-Fehler:', err);
+        }
+        res.redirect('/');
+    });
+});
+
+// GET /auth/register - Registrierungsseite (Platzhalter)
+router.get('/register', (req, res) => {
+    res.render('auth/register', {
+        title: 'Registrierung'
+    });
+});
+
+// POST /auth/register - Registrierung (Platzhalter)
+router.post('/register', async (req, res) => {
+    try {
+        const { email, password, confirmPassword } = req.body;
+
+        if (!email || !password || !confirmPassword) {
+            return res.redirect('/auth/register?error=Bitte füllen Sie alle Felder aus');
+        }
+
+        if (password !== confirmPassword) {
+            return res.redirect('/auth/register?error=Passwörter stimmen nicht überein');
+        }
+
+        // Supabase Registrierung
+        const { data, error } = await supabase.auth.signUp({
+            email,
+            password
+        });
+
+        if (error) {
+            console.error('Registrierungs-Fehler:', error.message);
+            return res.redirect('/auth/register?error=Registrierung fehlgeschlagen');
+        }
+
+        if (data.user) {
+            console.log(`✅ Benutzer ${email} erfolgreich registriert`);
+            res.redirect('/auth/login?success=Registrierung erfolgreich! Bitte bestätigen Sie Ihre E-Mail');
+        } else {
+            res.redirect('/auth/register?error=Registrierung fehlgeschlagen');
+        }
+
+    } catch (error) {
+        console.error('Registrierungs-Route Fehler:', error);
+        res.redirect('/auth/register?error=Ein Fehler ist aufgetreten');
+    }
+});
+
+// GET /auth/forgot-password - Passwort vergessen (Platzhalter)
+router.get('/forgot-password', (req, res) => {
+    res.render('auth/forgot-password', {
+        title: 'Passwort vergessen'
+    });
+});
+
+// POST /auth/forgot-password - Passwort zurücksetzen (Platzhalter)
+router.post('/forgot-password', async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        if (!email) {
+            return res.redirect('/auth/forgot-password?error=Bitte geben Sie Ihre E-Mail-Adresse ein');
+        }
+
+        // Supabase Passwort zurücksetzen
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: `${req.protocol}://${req.get('host')}/auth/reset-password`
+        });
+
+        if (error) {
+            console.error('Passwort-Reset-Fehler:', error.message);
+            return res.redirect('/auth/forgot-password?error=Fehler beim Senden der E-Mail');
+        }
+
+        console.log(`✅ Passwort-Reset-E-Mail an ${email} gesendet`);
+        res.redirect('/auth/login?success=E-Mail zum Zurücksetzen des Passworts wurde gesendet');
+
+    } catch (error) {
+        console.error('Passwort-Reset-Route Fehler:', error);
+        res.redirect('/auth/forgot-password?error=Ein Fehler ist aufgetreten');
+    }
 });
 
 module.exports = router;

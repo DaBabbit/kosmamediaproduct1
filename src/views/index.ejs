@@ -3,7 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KosmaMedia - Content Creation Subscriptions für alle</title>
+    <title>KosmaMedia – Social Media im Abo: Planen, Produzieren, Posten. Automatisiert.</title>
+    <meta name="description" content="Social Media systematisiert: Content-Planer, Videoloops, Posting & Bot – ab 199 €/Monat. Klarer Ablauf, messbare Ergebnisse.">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kosmamedia.de/">
+    <meta property="og:title" content="Social Media im Abo – systematisiert">
+    <meta property="og:description" content="Planung, Produktion, Posting & Automatisierung – alles in einem Produkt.">
+    <meta property="og:image" content="/og/kosmamedia.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://kosmamedia.de/">
+    <meta property="twitter:title" content="Social Media im Abo – systematisiert">
+    <meta property="twitter:description" content="Planung, Produktion, Posting & Automatisierung – alles in einem Produkt.">
+    <meta property="twitter:image" content="/og/kosmamedia.jpg">
+    
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5.0.50/dist/full.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="/css/main.css" rel="stylesheet">
@@ -11,7 +27,7 @@
 </head>
 <body>
     <!-- Navigation Bar -->
-    <nav class="navbar px-6 py-4">
+    <nav class="navbar px-6 py-4" id="header">
         <div class="container-xl flex items-center justify-between">
             <!-- Logo -->
             <div class="logo">
@@ -21,10 +37,18 @@
                 <span class="text-xl font-bold">KosmaMedia</span>
             </div>
             
+            <!-- Navigation Links -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#funktionen" class="text-gray-600 hover:text-gray-900 transition-colors">Funktionen</a>
+                <a href="#preise" class="text-gray-600 hover:text-gray-900 transition-colors">Preise</a>
+                <a href="#ergebnisse" class="text-gray-600 hover:text-gray-900 transition-colors">Ergebnisse</a>
+                <a href="#faq" class="text-gray-600 hover:text-gray-900 transition-colors">FAQ</a>
+            </div>
+            
             <!-- CTA Buttons -->
             <div class="flex items-center gap-4">
-                <a href="/auth/login" class="text-gray-600 hover:text-gray-900 transition-colors">Login</a>
-                <a href="#pricing" class="btn btn-primary">See pricing</a>
+                <a href="#beratung" class="text-gray-600 hover:text-gray-900 transition-colors">Kostenloses Beratungsgespräch</a>
+                <a href="/auth/login" class="btn btn-primary">Login</a>
             </div>
         </div>
     </nav>
@@ -33,293 +57,515 @@
     <section class="hero-section section">
         <div class="container-xl text-center">
             <h1 class="fade-in-up">
-                Content Creation Subscriptions für alle
+                Social Media. Systematisch. Im Abo.
             </h1>
             <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-                Pause or cancel anytime.
+                Planung, Produktion & Posting – als Produkt. Weniger Chaos, mehr Output.
             </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#pricing" class="btn btn-primary btn-lg">
-                    Start today
+            
+            <!-- Bullet Points -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 max-w-4xl mx-auto">
+                <div class="flex items-center justify-center space-x-3">
+                    <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="text-gray-700">Content-Planer mit Redaktionskalender</span>
+                </div>
+                <div class="flex items-center justify-center space-x-3">
+                    <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="text-gray-700">Automatische 5-Sekunden-Videoloops aus Links</span>
+                </div>
+                <div class="flex items-center justify-center space-x-3">
+                    <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="text-gray-700">WhatsApp-Bot für Freigaben & To-dos</span>
+                </div>
+            </div>
+            
+            <!-- CTAs -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mb-6">
+                <a href="#preise" class="btn btn-primary btn-lg">
+                    Jetzt starten
                 </a>
                 <a href="#demo" class="btn btn-secondary btn-lg">
-                    Join
+                    Ablauf in 90 Sek. ansehen
                 </a>
             </div>
-        </div>
-    </section>
-
-    <!-- Subtitle Section -->
-    <section class="section section-alt py-8">
-        <div class="container-xl">
-            <div class="flex flex-col lg:flex-row items-center justify-between gap-8">
-                <div class="text-center lg:text-left">
-                    <h2 class="text-2xl font-bold mb-4">
-                        KosmaMedia
-                    </h2>
-                    <p class="text-lg text-gray-600">
-                        One subscription to rule them all.
-                    </p>
-                </div>
-                
-                <!-- Service Grid -->
-                <div class="service-grid max-w-2xl stagger-children">
-                    <div class="service-item">
-                        <span class="text-sm font-medium">Social Media</span>
-                    </div>
-                    <div class="service-item">
-                        <span class="text-sm font-medium">Blog Posts</span>
-                    </div>
-                    <div class="service-item">
-                        <span class="text-sm font-medium">Email Marketing</span>
-                    </div>
-                    <div class="service-item">
-                        <span class="text-sm font-medium">Video Scripts</span>
-                    </div>
-                    <div class="service-item">
-                        <span class="text-sm font-medium">Landing Pages</span>
-                    </div>
-                    <div class="service-item">
-                        <span class="text-sm font-medium">Branding</span>
-                    </div>
-                    <div class="service-item">
-                        <span class="text-sm font-medium">Ad Creative</span>
-                    </div>
-                    <div class="service-item">
-                        <span class="text-sm font-medium">Newsletters</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Main Value Proposition -->
-    <section class="section">
-        <div class="container-xl text-center">
-            <h2 class="fade-in-up">
-                The way content creation should've been done in the first place
-            </h2>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto stagger-children">
-                <!-- Subscribe -->
-                <div class="text-center">
-                    <h3 class="text-2xl font-bold mb-4">Subscribe</h3>
-                    <p class="text-gray-600">
-                        [PLATZHALTER: Subscribe to a plan & request as many content pieces as you'd like]
-                    </p>
-                </div>
-                
-                <!-- Request -->
-                <div class="text-center">
-                    <h3 class="text-2xl font-bold mb-4">Request</h3>
-                    <p class="text-gray-600">
-                        [PLATZHALTER: Request whatever you'd like, from social media posts to video scripts]
-                    </p>
-                </div>
-                
-                <!-- Receive -->
-                <div class="text-center">
-                    <h3 class="text-2xl font-bold mb-4">Receive</h3>
-                    <p class="text-gray-600">
-                        [PLATZHALTER: Receive your content within two business days on average]
-                    </p>
-                </div>
-            </div>
+            <!-- Micro Trust -->
+            <p class="text-sm text-gray-500">
+                Transparente Monatspakete · Kündbar monatlich · DSGVO-konform
+            </p>
         </div>
     </section>
 
-    <!-- About Section -->
-    <section class="section section-alt">
+    <!-- "So funktioniert's" Section -->
+    <section class="section section-alt" id="demo">
         <div class="container-xl">
             <div class="text-center mb-16">
-                <p class="text-lg text-gray-600 max-w-4xl mx-auto">
-                    [PLATZHALTER: First launched in 2024, KosmaMedia revolutionized the content creation industry with its subscription-based model. To this day, KosmaMedia is run entirely by our team. KosmaMedia doesn't hire extra writers or outsource work—instead, it focuses on delivering top-notch quality to a limited roster of clients at a time.]
-                </p>
+                <h2 class="text-4xl font-bold mb-4">So funktioniert's</h2>
+                <p class="text-xl text-gray-600">In 3 einfachen Schritten zu systematischem Social Media</p>
             </div>
             
-            <div class="text-center">
-                <h2 class="text-3xl font-bold mb-8">Membership benefits</h2>
-                <h3 class="text-4xl font-bold mb-8">
-                    It's "you'll never go back" better
-                </h3>
-                <p class="text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
-                    [PLATZHALTER: KosmaMedia replaces unreliable freelancers and expensive agencies for one flat monthly fee, with content delivered so fast you won't want to go anywhere else.]
-                </p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-children">
-                <!-- Benefit 1 -->
-                <div class="feature-card">
-                    <h4 class="text-xl font-bold mb-4">Content Board</h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
+                <!-- Step 1 -->
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-2xl font-bold text-blue-600">1</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Accounts verbinden</h3>
                     <p class="text-gray-600">
-                        [PLATZHALTER: Easily manage your content queue with a Trello board]
+                        Instagram, TikTok, YouTube, LinkedIn und Co. an den Planer anbinden.
                     </p>
                 </div>
                 
-                <!-- Benefit 2 -->
-                <div class="feature-card">
-                    <h4 class="text-xl font-bold mb-4">Fixed monthly rate</h4>
+                <!-- Step 2 -->
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-2xl font-bold text-green-600">2</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Planen & Briefen</h3>
                     <p class="text-gray-600">
-                        [PLATZHALTER: No surprises here! Pay the same fixed price each month]
+                        Themen auswählen, Skripte/Ideen freigeben, Uploads/Links teilen.
                     </p>
                 </div>
                 
-                <!-- Benefit 3 -->
-                <div class="feature-card">
-                    <h4 class="text-xl font-bold mb-4">Fast delivery</h4>
+                <!-- Step 3 -->
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-2xl font-bold text-purple-600">3</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Automatisiert posten</h3>
                     <p class="text-gray-600">
-                        [PLATZHALTER: Get your content one at a time in just a couple days on average]
+                        Produktion, Schnitt, Videoloops & Veröffentlichung laufen nach Plan.
                     </p>
-                </div>
-                
-                <!-- Benefit 4 -->
-                <div class="feature-card">
-                    <h4 class="text-xl font-bold mb-4">Top-notch quality</h4>
-                    <p class="text-gray-600">
-                        [PLATZHALTER: Senior content quality at your fingertips, whenever you need it]
-                    </p>
-                </div>
-                
-                <!-- Benefit 5 -->
-                <div class="feature-card">
-                    <h4 class="text-xl font-bold mb-4">Flexible and scalable</h4>
-                    <p class="text-gray-600">
-                        [PLATZHALTER: Scale up or down as needed, and pause or cancel at anytime]
-                    </p>
-                </div>
-                
-                <!-- Benefit 6 -->
-                <div class="feature-card">
-                    <h4 class="text-xl font-bold mb-4">Unique and all yours</h4>
-                    <p class="text-gray-600">
-                        [PLATZHALTER: Every piece of content is made especially for you and is 100% yours]
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials Section -->
-    <section class="section">
-        <div class="container-xl">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold mb-4">Recent work</h2>
-                <h3 class="text-4xl font-bold mb-8">
-                    We're talking "Product of the Year" good
-                </h3>
-                <a href="#work" class="btn btn-secondary">See recent work</a>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 stagger-children">
-                <div class="testimonial-card">
-                    <h4 class="font-semibold mb-2">Web design</h4>
-                </div>
-                <div class="testimonial-card">
-                    <h4 class="font-semibold mb-2">Social media</h4>
-                </div>
-                <div class="testimonial-card">
-                    <h4 class="font-semibold mb-2">Email marketing</h4>
-                </div>
-                <div class="testimonial-card">
-                    <h4 class="font-semibold mb-2">Branding</h4>
                 </div>
             </div>
             
             <div class="text-center mt-8">
-                <p class="text-gray-600">+ more</p>
+                <a href="#details" class="btn btn-ghost">Details zum Ablauf</a>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
+    <!-- Core Features Section -->
+    <section class="section" id="funktionen">
+        <div class="container-xl">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">Kernfunktionen</h2>
+                <p class="text-xl text-gray-600">Alles was Sie für systematisches Social Media brauchen</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-children">
+                <!-- Feature 1 -->
+                <div class="feature-card">
+                    <h4 class="text-xl font-bold mb-4">Content-Planer</h4>
+                    <p class="text-gray-600">
+                        Redaktionskalender, der sich an Ihren Zielen ausrichtet.
+                    </p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="feature-card">
+                    <h4 class="text-xl font-bold mb-4">Automatische Videoloops (5s)</h4>
+                    <p class="text-gray-600">
+                        Aus einem Link wird in Sekunden ein Loop – perfekt fürs Wiedererkennen.
+                    </p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="feature-card">
+                    <h4 class="text-xl font-bold mb-4">Posting & Scheduling</h4>
+                    <p class="text-gray-600">
+                        Plattformgerecht, konsistent, zeitsparend.
+                    </p>
+                </div>
+                
+                <!-- Feature 4 -->
+                <div class="feature-card">
+                    <h4 class="text-xl font-bold mb-4">WhatsApp-KosmaMedia-Bot</h4>
+                    <p class="text-gray-600">
+                        Freigaben, Erinnerungen, Status – dort, wo Teams wirklich lesen.
+                    </p>
+                </div>
+                
+                <!-- Feature 5 -->
+                <div class="feature-card">
+                    <h4 class="text-xl font-bold mb-4">Scripting für Talking-Videos</h4>
+                    <p class="text-gray-600">
+                        Kurz, präzise, on-brand – auf Wunsch vorbereitet.
+                    </p>
+                </div>
+                
+                <!-- Feature 6 -->
+                <div class="feature-card">
+                    <h4 class="text-xl font-bold mb-4">Individueller Schnitt</h4>
+                    <p class="text-gray-600">
+                        CI-Stil, Snippets, Untertitel, Hook-Frames – wiederverwendbar.
+                    </p>
+                </div>
+                
+                <!-- Feature 7 -->
+                <div class="feature-card">
+                    <h4 class="text-xl font-bold mb-4">Strategieprofil</h4>
+                    <p class="text-gray-600">
+                        Zielbild, Formate, Tonalität, KPIs – einmal definiert, immer genutzt.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Philosophy Section -->
     <section class="section section-alt">
         <div class="container-sm text-center">
-            <h2 class="text-4xl font-bold mb-6">
-                Apps, websites, logos & more
-            </h2>
-            <p class="text-xl text-gray-600 mb-8">
-                All the things you need under one roof.
+            <h2 class="text-4xl font-bold mb-8">Produkt statt Projekt</h2>
+            <p class="text-xl text-gray-600 max-w-4xl mx-auto">
+                Kein offenes Ende, keine lose To-do-Liste. Ein festes System mit klaren Paketen – Planung, Produktion, Posting und Automatisierung als wiederholbarer Prozess. So wird Social Media vom Zufall befreit.
             </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#pricing" class="btn btn-primary">
-                    PRICING
-                </a>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="section" id="ergebnisse">
+        <div class="container-xl">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">Ergebnisse, nicht nur Aufwand</h2>
+                <p class="text-xl text-gray-600">Messbare Verbesserungen durch systematischen Ansatz</p>
+            </div>
+            
+            <!-- Metric Chips -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <div class="bg-blue-100 text-blue-800 px-6 py-3 rounded-full font-semibold">
+                    +X% Reichweite
+                </div>
+                <div class="bg-green-100 text-green-800 px-6 py-3 rounded-full font-semibold">
+                    +Y% CTR
+                </div>
+                <div class="bg-purple-100 text-purple-800 px-6 py-3 rounded-full font-semibold">
+                    Z Posts/Monat
+                </div>
+            </div>
+            
+            <!-- Testimonials -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="testimonial-card">
+                    <p class="text-gray-700 mb-4">
+                        "Plan klar, Produktion pünktlich – endlich konsistent."
+                    </p>
+                    <p class="text-sm text-gray-500">– Kunde A</p>
+                </div>
+                
+                <div class="testimonial-card">
+                    <p class="text-gray-700 mb-4">
+                        "Videoloops steigern Wiedererkennung spürbar."
+                    </p>
+                    <p class="text-sm text-gray-500">– Kunde B</p>
+                </div>
+                
+                <div class="testimonial-card">
+                    <p class="text-gray-700 mb-4">
+                        "WhatsApp-Freigaben sparen uns Meetings."
+                    </p>
+                    <p class="text-sm text-gray-500">– Kunde C</p>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Pricing Section -->
-    <section id="pricing" class="section">
+    <section id="preise" class="section section-alt">
         <div class="container-xl">
             <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold mb-4">
-                    One subscription, endless possibilities
-                </h2>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="#pricing" class="btn btn-primary">Start today</a>
-                    <a href="#pricing" class="btn btn-secondary">Join</a>
-                </div>
+                <h2 class="text-4xl font-bold mb-4">Preisübersicht</h2>
+                <p class="text-xl text-gray-600">Wählen Sie das Paket, das zu Ihren Zielen passt</p>
             </div>
             
-            <div class="max-w-4xl mx-auto">
-                <div class="pricing-card p-12 text-center">
-                    <div class="mb-8">
-                        <h3 class="text-2xl font-bold mb-2">KosmaMedia</h3>
-                        <h4 class="text-xl font-bold mb-2">Monthly Club</h4>
-                        <p class="text-gray-600">PAUSE OR CANCEL ANYTIME</p>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- Paket 1: System Start -->
+                <div class="pricing-card p-8 text-center">
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold mb-2">System Start</h3>
+                        <p class="text-gray-600 mb-4">Für wen: Klarer Einstieg mit Planung & Automatisierung.</p>
+                        <div class="text-4xl font-bold">199 €<span class="text-lg text-gray-600">/Monat</span></div>
                     </div>
                     
-                    <div class="mb-8">
-                        <span class="text-6xl font-bold">€299</span>
-                        <span class="text-xl text-gray-600">/month</span>
-                    </div>
-                    
-                    <ul class="text-left space-y-4 mb-8 max-w-md mx-auto">
+                    <ul class="text-left space-y-3 mb-8">
                         <li class="flex items-center space-x-3">
                             <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                             </svg>
-                            <span class="text-gray-700">[PLATZHALTER: One request at a time]</span>
+                            <span class="text-gray-700">Verbindung der Social-Media-Accounts</span>
                         </li>
                         <li class="flex items-center space-x-3">
                             <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                             </svg>
-                            <span class="text-gray-700">[PLATZHALTER: Avg. 48 hour delivery]</span>
+                            <span class="text-gray-700">Content-Planer (Redaktionskalender)</span>
                         </li>
                         <li class="flex items-center space-x-3">
                             <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                             </svg>
-                            <span class="text-gray-700">[PLATZHALTER: Unlimited brands]</span>
+                            <span class="text-gray-700">Plattformgerechtes Posting & Scheduling</span>
                         </li>
                         <li class="flex items-center space-x-3">
                             <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                             </svg>
-                            <span class="text-gray-700">[PLATZHALTER: Up to 2 users]</span>
+                            <span class="text-gray-700">Automatische 5-Sekunden-Videoloops (bis 20 Loops)</span>
                         </li>
                         <li class="flex items-center space-x-3">
                             <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                             </svg>
-                            <span class="text-gray-700">[PLATZHALTER: Pause or cancel anytime]</span>
+                            <span class="text-gray-700">WhatsApp-KosmaMedia-Bot (Status, Freigaben, Erinnerungen)</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">Reporting-Snippet (Monatsüberblick als Kurzreport)</span>
                         </li>
                     </ul>
                     
-                    <div class="mb-8">
-                        <span class="text-lg font-bold">Included</span>
+                    <a href="/auth/login" class="btn btn-primary btn-full">
+                        Mit System Start loslegen
+                    </a>
+                </div>
+                
+                <!-- Paket 2: Wachstum Pro -->
+                <div class="pricing-card p-8 text-center border-2 border-blue-500 relative">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                        <span class="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-semibold">Empfohlen</span>
                     </div>
                     
-                    <a href="/auth/login" class="btn btn-primary btn-lg mb-4">
-                        Join today
-                    </a>
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold mb-2">Wachstum Pro</h3>
+                        <p class="text-gray-600 mb-4">Für wen: Plan + Produktion mit klarer Taktung.</p>
+                        <div class="text-4xl font-bold">449 €<span class="text-lg text-gray-600">/Monat</span></div>
+                    </div>
                     
-                    <div class="space-y-4 text-sm text-gray-500">
-                        <p>Pause anytime</p>
-                        <p>[PLATZHALTER: Temporarily pause your subscription anytime, no sweat]</p>
-                        <p>Try it for a week</p>
-                        <p>[PLATZHALTER: Not loving it after a week? Get 75% back, no questions asked]</p>
+                    <ul class="text-left space-y-3 mb-8">
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700"><strong>Alles aus "System Start" +</strong></span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">Marketingstrategie-Profil (Ziele, Formate, Tonalität, KPIs)</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">12 Videos/Monat Produktion (Kurzform; Plattform-Cut)</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">Content-Recherche & Ideation</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">Scripting für Talking-Videos (Kurzskripte)</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">Individueller Schnitt (CI-Stil, Untertitel, Hook-Frames)</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">Zugang zum Content-Planer (Team-Zugänge)</span>
+                        </li>
+                    </ul>
+                    
+                    <a href="/auth/login" class="btn btn-primary btn-full">
+                        Wachstum aktivieren
+                    </a>
+                </div>
+                
+                <!-- Paket 3: Scale Suite -->
+                <div class="pricing-card p-8 text-center">
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold mb-2">Scale Suite</h3>
+                        <p class="text-gray-600 mb-4">Für wen: Vollpaket für Tempo & Skalierung.</p>
+                        <div class="text-4xl font-bold">599 €<span class="text-lg text-gray-600">/Monat</span></div>
+                    </div>
+                    
+                    <ul class="text-left space-y-3 mb-8">
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700"><strong>Alles aus 1 + 2 +</strong></span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">Priorisierte Produktionsslots</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">Erweiterte Loop-Kontingente (bis 60/Monat)</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">Format-System (Serien/Playlists, Re-Cuts, Crossposting)</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-gray-700">Zusatz-Reporting (Format-Performance, Hook-Tests)</span>
+                        </li>
+                    </ul>
+                    
+                    <a href="/auth/login" class="btn btn-primary btn-full">
+                        Jetzt skalieren
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Price Microcopy -->
+            <div class="text-center mt-8">
+                <p class="text-sm text-gray-500">
+                    Monatlich kündbar. Faire Nutzung gemäß Kontingenten. Add-ons auf Anfrage.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add-ons Section -->
+    <section class="section">
+        <div class="container-xl">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-4">Add-ons</h2>
+                <p class="text-gray-600">Erweitern Sie Ihr Paket nach Bedarf</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
+                <div class="text-center p-4">
+                    <h4 class="font-semibold mb-2">Untertitel-Branding-Paket</h4>
+                </div>
+                <div class="text-center p-4">
+                    <h4 class="font-semibold mb-2">Thumbnail-Design</h4>
+                </div>
+                <div class="text-center p-4">
+                    <h4 class="font-semibold mb-2">Zweit-Sprache/Voiceover</h4>
+                </div>
+                <div class="text-center p-4">
+                    <h4 class="font-semibold mb-2">Werbeanzeigen-Setup (Paid Boosts)</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="section section-alt">
+        <div class="container-xl">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4">Häufig gestellte Fragen</h2>
+                <p class="text-xl text-gray-600">Alles was Sie wissen müssen</p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto space-y-6">
+                <!-- FAQ Item 1 -->
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="text-lg font-semibold mb-3">Wie läuft das Onboarding?</h3>
+                        <p class="text-gray-600">
+                            Kickoff-Call (30 Min.), Accounts verbinden, Strategieprofil definieren, Redaktionskalender starten. Erste Inhalte in Woche 1.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 2 -->
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="text-lg font-semibold mb-3">Wie werden Videoloops erstellt?</h3>
+                        <p class="text-gray-600">
+                            Es wird ein Link zum Beitrag gesendet; daraus werden automatisch 5-Sekunden-Loops generiert und in den Plan übernommen.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 3 -->
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="text-lg font-semibold mb-3">Wie erfolgen Freigaben?</h3>
+                        <p class="text-gray-600">
+                            Direkt im WhatsApp-KosmaMedia-Bot oder im Planer (Kommentar/Status).
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 4 -->
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="text-lg font-semibold mb-3">Wie viele Revisionen sind enthalten?</h3>
+                        <p class="text-gray-600">
+                            Pro Video eine Korrekturschleife (Text/Timing/Grafik), weitere als Add-on.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 5 -->
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="text-lg font-semibold mb-3">Wem gehören die Inhalte?</h3>
+                        <p class="text-gray-600">
+                            Vollständige Nutzungsrechte für die produzierten Inhalte nach Zahlungseingang.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 6 -->
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="text-lg font-semibold mb-3">Kündigungsfrist & Pause?</h3>
+                        <p class="text-gray-600">
+                            Monatlich kündbar, pausierbar zum Monatsende.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 7 -->
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="text-lg font-semibold mb-3">DSGVO & Datenhaltung?</h3>
+                        <p class="text-gray-600">
+                            Verarbeitung gemäß DSGVO; Zugriff nur für Produktionszwecke, Löschung auf Wunsch möglich.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 8 -->
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="text-lg font-semibold mb-3">Welche Plattformen werden unterstützt?</h3>
+                        <p class="text-gray-600">
+                            Instagram, TikTok, YouTube (Shorts), LinkedIn, Facebook (weitere auf Anfrage).
+                        </p>
                     </div>
                 </div>
             </div>
@@ -330,14 +576,17 @@
     <section class="section">
         <div class="container-sm text-center">
             <h2 class="text-4xl font-bold mb-6">
-                See if KosmaMedia is the right fit for you (it totally is)
+                Bereit, Social Media zu systematisieren?
             </h2>
             <p class="text-xl text-gray-600 mb-8">
-                [PLATZHALTER: Schedule a quick, 15 minute guided tour through KosmaMedia]
+                Wählen Sie Ihr Paket und starten Sie diese Woche.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="/auth/login" class="btn btn-primary">
-                    [PLATZHALTER: Book a call]
+                <a href="#preise" class="btn btn-primary btn-lg">
+                    Jetzt starten
+                </a>
+                <a href="#beratung" class="btn btn-secondary btn-lg">
+                    Beratungsgespräch buchen
                 </a>
             </div>
         </div>
@@ -345,21 +594,64 @@
 
     <!-- Footer -->
     <footer class="footer py-12 px-6">
-        <div class="container-xl text-center">
-            <p class="text-gray-400 mb-4">
-                [PLATZHALTER: Headquartered in Munich, Germany]
-            </p>
-            <div class="flex justify-center space-x-6 mb-4">
-                <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                    [PLATZHALTER: Terms of service]
-                </a>
-                <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                    [PLATZHALTER: Privacy Policy]
-                </a>
+        <div class="container-xl">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
+                <div>
+                    <div class="logo mb-4">
+                        <div class="logo-icon">
+                            <div class="logo-icon-inner"></div>
+                        </div>
+                        <span class="text-lg font-bold">KosmaMedia</span>
+                    </div>
+                    <p class="text-gray-400">
+                        Produktisierte Social-Media-Leistung
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Produkt</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#funktionen" class="hover:text-white transition-colors">Funktionen</a></li>
+                        <li><a href="#preise" class="hover:text-white transition-colors">Preise</a></li>
+                        <li><a href="#demo" class="hover:text-white transition-colors">Demo</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Support</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#faq" class="hover:text-white transition-colors">FAQ</a></li>
+                        <li><a href="#beratung" class="hover:text-white transition-colors">Beratung</a></li>
+                        <li><a href="/auth/login" class="hover:text-white transition-colors">Login</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Rechtliches</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">Impressum</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Datenschutz</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">AGB</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Kontakt</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">Kontakt</a></li>
+                        <li><a href="#beratung" class="hover:text-white transition-colors">Beratungsgespräch</a></li>
+                    </ul>
+                </div>
             </div>
-            <p class="text-gray-400">
-                [PLATZHALTER: KosmaMedia is experiencing a high volume of bookings, so slots are limited. For faster service, email hello@kosmamedia.de for a same-day response]
-            </p>
+            
+            <div class="border-t border-gray-800 pt-8 text-center">
+                <p class="text-gray-400 mb-2">
+                    © KosmaMedia – Produktisierte Social-Media-Leistung
+                </p>
+                <p class="text-xs text-gray-500">
+                    Marken gehören ihren jeweiligen Inhabern. Plattformnamen dienen nur der Beschreibung.
+                </p>
+            </div>
         </div>
     </footer>
 </body>

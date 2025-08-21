@@ -86,7 +86,16 @@ router.post('/login', async (req, res) => {
                 from: '/auth/login', 
                 to: '/dashboard',
                 userId: data.user.id,
-                sessionId: req.sessionID
+                sessionId: req.sessionID,
+                sessionData: req.session
+            });
+
+            // Debug: Session vor Redirect überprüfen
+            logger.debug('Session vor Dashboard-Redirect', {
+                sessionId: req.sessionID,
+                session: req.session,
+                userId: req.session.userId,
+                userEmail: req.session.userEmail
             });
 
             res.redirect('/dashboard');

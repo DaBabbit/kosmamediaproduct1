@@ -5,12 +5,22 @@ const router = express.Router();
 
 // Dashboard-Seite (nur für eingeloggte Benutzer)
 router.get('/', requireAuth, (req, res) => {
-    logger.info('Dashboard-Zugriff', { 
+    logger.info('Dashboard-Zugriff erfolgreich', { 
         userId: req.user.id,
         email: req.user.email,
         sessionId: req.sessionID,
         url: req.url,
-        userAgent: req.get('User-Agent')
+        userAgent: req.get('User-Agent'),
+        sessionData: req.session
+    });
+    
+    // Debug: Session-Status überprüfen
+    logger.debug('Dashboard-Session-Status', {
+        hasSession: !!req.session,
+        sessionId: req.sessionID,
+        userId: req.session?.userId,
+        userEmail: req.session?.userEmail,
+        userObject: req.user
     });
     
     res.render('dashboard/index', { 

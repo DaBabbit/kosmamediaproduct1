@@ -90,3 +90,4 @@ ehthumbs.db
 Thumbs.db
 .vercel
 src/logs/
+.env*.local

@@ -3,7 +3,7 @@ const logger = require('../utils/logger');
 
 const requireAuth = async (req, res, next) => {
     try {
-        logger.auth('Auth-Middleware gestartet', { 
+        logger.auth('Auth-Middleware gestartet', {
             url: req.url,
             method: req.method,
             sessionId: req.sessionID,
@@ -12,85 +12,155 @@ const requireAuth = async (req, res, next) => {
             cookies: req.cookies
         });
 
-        // Prüfe Session
-        if (!req.session.userId) {
-            logger.warn('Auth-Middleware: Keine Session', { 
-                url: req.url,
-                sessionId: req.sessionID,
-                session: req.session
-            });
-            return res.redirect('/auth/login');
-        }
+        // Prüfe zuerst Supabase-Token (Priorität für Vercel)
+        const accessToken = req.cookies['sb-access-token'];
+        const refreshToken = req.cookies['sb-refresh-token'];
 
-        logger.session('Session gefunden', { 
-            sessionId: req.sessionID,
-            userId: req.session.userId,
-            userEmail: req.session.userEmail,
-            sessionData: req.session
-        });
-
-        // Prüfe Supabase-Token (falls vorhanden)
-        const token = req.cookies['sb-access-token'];
-        
-        if (token) {
-            logger.auth('Supabase-Token gefunden', { 
-                tokenLength: token.length,
-                hasToken: !!token
+        if (accessToken) {
+            logger.auth('Supabase-Token gefunden', {
+                tokenLength: accessToken.length,
+                hasToken: !!accessToken,
+                hasRefreshToken: !!refreshToken
             });
-            
+
             try {
-                const { data: { user }, error } = await supabase.auth.getUser(token);
-                
+                // Token validieren
+                const { data: { user }, error } = await supabase.auth.getUser(accessToken);
+
                 if (error || !user) {
-                    logger.error('Token-Validierung fehlgeschlagen', { 
+                    logger.warn('Token-Validierung fehlgeschlagen', {
                         error: error?.message,
                         hasUser: !!user,
-                        tokenLength: token.length
+                        tokenLength: accessToken.length
                     });
+
+                    // Token ist ungültig - löschen und neu versuchen
                     res.clearCookie('sb-access-token');
+                    res.clearCookie('sb-refresh-token');
+
+                    // Fallback auf Express-Session
+                    if (req.session.userId) {
+                        logger.session('Fallback auf Express-Session', {
+                            sessionId: req.sessionID,
+                            userId: req.session.userId,
+                            userEmail: req.session.userEmail
+                        });
+
+                        req.user = {
+                            id: req.session.userId,
+                            email: req.session.userEmail
+                        };
+
+                        logger.auth('Auth-Middleware erfolgreich (Express-Session)', {
+                            userId: req.user.id,
+                            email: req.user.email,
+                            url: req.url,
+                            sessionId: req.sessionID
+                        });
+
+                        return next();
+                    }
+
                     return res.redirect('/auth/login');
                 }
-                
-                logger.auth('Token-Validierung erfolgreich', { 
+
+                logger.auth('Token-Validierung erfolgreich', {
                     userId: user.id,
                     email: user.email,
                     emailConfirmed: user.email_confirmed_at
                 });
-                
+
                 req.user = user;
+
+                // Express-Session synchronisieren
+                req.session.userId = user.id;
+                req.session.userEmail = user.email;
+
+                logger.auth('Auth-Middleware erfolgreich (Supabase-Token)', {
+                    userId: req.user.id,
+                    email: req.user.email,
+                    url: req.url,
+                    sessionId: req.sessionID
+                });
+
+                return next();
             } catch (error) {
-                logger.error('Token-Validierung unerwarteter Fehler', { 
+                logger.error('Token-Validierung unerwarteter Fehler', {
                     error: error.message,
                     stack: error.stack,
-                    tokenLength: token.length
+                    tokenLength: accessToken.length
                 });
+
                 res.clearCookie('sb-access-token');
+                res.clearCookie('sb-refresh-token');
+
+                // Fallback auf Express-Session
+                if (req.session.userId) {
+                    logger.session('Fallback auf Express-Session nach Token-Fehler', {
+                        sessionId: req.sessionID,
+                        userId: req.session.userId,
+                        userEmail: req.session.userEmail
+                    });
+
+                    req.user = {
+                        id: req.session.userId,
+                        email: req.session.userEmail
+                    };
+
+                    logger.auth('Auth-Middleware erfolgreich (Express-Session Fallback)', {
+                        userId: req.user.id,
+                        email: req.user.email,
+                        url: req.url,
+                        sessionId: req.sessionID
+                    });
+
+                    return next();
+                }
+
                 return res.redirect('/auth/login');
             }
         } else {
-            logger.session('Verwende Session-Daten (kein Token)', { 
+            logger.session('Kein Supabase-Token - verwende Express-Session', {
+                sessionId: req.sessionID,
+                hasSession: !!req.session,
+                userId: req.session?.userId,
+                userEmail: req.session?.userEmail
+            });
+
+            // Fallback auf Express-Session
+            if (!req.session.userId) {
+                logger.warn('Auth-Middleware: Keine Session', {
+                    url: req.url,
+                    sessionId: req.sessionID,
+                    session: req.session
+                });
+                return res.redirect('/auth/login');
+            }
+
+            logger.session('Express-Session gefunden', {
                 sessionId: req.sessionID,
                 userId: req.session.userId,
-                userEmail: req.session.userEmail
+                userEmail: req.session.userEmail,
+                sessionData: req.session
             });
-            
-            // Verwende Session-Daten
+
             req.user = {
                 id: req.session.userId,
                 email: req.session.userEmail
             };
+
+            logger.auth('Auth-Middleware erfolgreich (Express-Session)', {
+                userId: req.user.id,
+                email: req.user.email,
+                url: req.url,
+                sessionId: req.sessionID
+            });
+
+            return next();
         }
-        
-        logger.auth('Auth-Middleware erfolgreich', { 
-            userId: req.user.id,
-            email: req.user.email,
-            url: req.url,
-            sessionId: req.sessionID
-        });
-        
-        next();
+
     } catch (error) {
-        logger.error('Auth-Middleware unerwarteter Fehler', { 
+        logger.error('Auth-Middleware unerwarteter Fehler', {
             error: error.message,
             stack: error.stack,
             url: req.url,

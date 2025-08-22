@@ -27,36 +27,36 @@
 </head>
 <body>
     <!-- Navigation Bar -->
-    <nav class="navbar px-6 py-4" id="header">
-        <div class="container-xl flex items-center justify-between">
+    <nav class="bg-white shadow-sm border-b border-gray-200 px-6 py-4" id="header">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
             <!-- Logo -->
-            <div class="logo">
+            <div class="flex items-center space-x-3">
                 <div class="logo-icon">
                     <div class="logo-icon-inner"></div>
                 </div>
-                <span class="text-xl font-bold">KosmaMedia</span>
+                <span class="text-xl font-bold text-gray-900">KosmaMedia</span>
             </div>
             
             <!-- Navigation Links -->
             <div class="hidden md:flex items-center space-x-8">
-                <a href="#funktionen" class="nav-link">Funktionen</a>
-                <a href="#preise" class="nav-link">Preise</a>
-                <a href="#ergebnisse" class="nav-link">Ergebnisse</a>
-                <a href="#faq" class="nav-link">FAQ</a>
+                <a href="#funktionen" class="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">Funktionen</a>
+                <a href="#preise" class="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">Preise</a>
+                <a href="#ergebnisse" class="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">Ergebnisse</a>
+                <a href="#faq" class="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">FAQ</a>
             </div>
             
             <!-- CTA Buttons -->
             <div class="flex items-center gap-4">
-                <a href="#beratung" class="nav-link">Kostenloses Beratungsgespräch</a>
-                <a href="/auth/login" class="btn btn-secondary animate-pulse">Login</a>
+                <a href="#beratung" class="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors">Kostenloses Beratungsgespräch</a>
+                <a href="/auth/login" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium">Login</a>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero-section section">
-        <div class="container-xl text-center">
-            <h1 class="fade-in-up">
+    <section class="py-20 bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
                 Social Media. Systematisch. Im Abo.
             </h1>
             <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
@@ -87,10 +87,10 @@
             
             <!-- CTAs -->
             <div class="flex flex-col sm:flex-row gap-4 justify-center mb-6">
-                <a href="#preise" class="btn btn-primary btn-lg">
+                <a href="#preise" class="bg-blue-600 text-white px-8 py-4 rounded-lg hover:bg-blue-700 transition-colors font-semibold text-lg">
                     Jetzt starten
                 </a>
-                <a href="#demo" class="btn btn-secondary btn-lg">
+                <a href="#demo" class="bg-white text-blue-600 px-8 py-4 rounded-lg hover:bg-gray-50 transition-colors font-semibold text-lg border-2 border-blue-600">
                     Ablauf in 90 Sek. ansehen
                 </a>
             </div>
@@ -103,8 +103,8 @@
     </section>
 
     <!-- "So funktioniert's" Section -->
-    <section class="section section-alt" id="demo">
-        <div class="container-xl">
+    <section class="py-20 bg-gray-50" id="demo">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <h2 class="text-4xl font-bold mb-4">So funktioniert's</h2>
                 <p class="text-xl text-gray-600">In 3 einfachen Schritten zu systematischem Social Media</p>
@@ -146,14 +146,14 @@
             </div>
             
             <div class="text-center mt-8">
-                <a href="#details" class="btn btn-ghost">Details zum Ablauf</a>
+                <a href="#details" class="text-blue-600 hover:text-blue-800 font-medium">Details zum Ablauf</a>
             </div>
         </div>
     </section>
 
     <!-- Core Features Section -->
-    <section class="section" id="funktionen">
-        <div class="container-xl">
+    <section class="py-20" id="funktionen">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <h2 class="text-4xl font-bold mb-4">Kernfunktionen</h2>
                 <p class="text-xl text-gray-600">Alles was Sie für systematisches Social Media brauchen</p>
@@ -161,56 +161,56 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-children">
                 <!-- Feature 1 -->
-                <div class="feature-card">
-                    <h4 class="text-xl font-bold mb-4">Content-Planer</h4>
+                <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
+                    <h4 class="text-xl font-bold mb-4 text-gray-900">Content-Planer</h4>
                     <p class="text-gray-600">
                         Redaktionskalender, der sich an Ihren Zielen ausrichtet.
                     </p>
                 </div>
                 
                 <!-- Feature 2 -->
-                <div class="feature-card">
-                    <h4 class="text-xl font-bold mb-4">Automatische Videoloops (5s)</h4>
+                <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
+                    <h4 class="text-xl font-bold mb-4 text-gray-900">Automatische Videoloops (5s)</h4>
                     <p class="text-gray-600">
                         Aus einem Link wird in Sekunden ein Loop – perfekt fürs Wiedererkennen.
                     </p>
                 </div>
                 
                 <!-- Feature 3 -->
-                <div class="feature-card">
-                    <h4 class="text-xl font-bold mb-4">Posting & Scheduling</h4>
+                <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
+                    <h4 class="text-xl font-bold mb-4 text-gray-900">Posting & Scheduling</h4>
                     <p class="text-gray-600">
                         Plattformgerecht, konsistent, zeitsparend.
                     </p>
                 </div>
                 
                 <!-- Feature 4 -->
-                <div class="feature-card">
-                    <h4 class="text-xl font-bold mb-4">WhatsApp-KosmaMedia-Bot</h4>
+                <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
+                    <h4 class="text-xl font-bold mb-4 text-gray-900">WhatsApp-KosmaMedia-Bot</h4>
                     <p class="text-gray-600">
                         Freigaben, Erinnerungen, Status – dort, wo Teams wirklich lesen.
                     </p>
                 </div>
                 
                 <!-- Feature 5 -->
-                <div class="feature-card">
-                    <h4 class="text-xl font-bold mb-4">Scripting für Talking-Videos</h4>
+                <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
+                    <h4 class="text-xl font-bold mb-4 text-gray-900">Scripting für Talking-Videos</h4>
                     <p class="text-gray-600">
                         Kurz, präzise, on-brand – auf Wunsch vorbereitet.
                     </p>
                 </div>
                 
                 <!-- Feature 6 -->
-                <div class="feature-card">
-                    <h4 class="text-xl font-bold mb-4">Individueller Schnitt</h4>
+                <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
+                    <h4 class="text-xl font-bold mb-4 text-gray-900">Individueller Schnitt</h4>
                     <p class="text-gray-600">
                         CI-Stil, Snippets, Untertitel, Hook-Frames – wiederverwendbar.
                     </p>
                 </div>
                 
                 <!-- Feature 7 -->
-                <div class="feature-card">
-                    <h4 class="text-xl font-bold mb-4">Strategieprofil</h4>
+                <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
+                    <h4 class="text-xl font-bold mb-4 text-gray-900">Strategieprofil</h4>
                     <p class="text-gray-600">
                         Zielbild, Formate, Tonalität, KPIs – einmal definiert, immer genutzt.
                     </p>
@@ -220,8 +220,8 @@
     </section>
 
     <!-- Product Philosophy Section -->
-    <section class="section section-alt">
-        <div class="container-sm text-center">
+    <section class="py-20 bg-gray-50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 class="text-4xl font-bold mb-8">Produkt statt Projekt</h2>
             <p class="text-xl text-gray-600 max-w-4xl mx-auto">
                 Kein offenes Ende, keine lose To-do-Liste. Ein festes System mit klaren Paketen – Planung, Produktion, Posting und Automatisierung als wiederholbarer Prozess. So wird Social Media vom Zufall befreit.
@@ -230,8 +230,8 @@
     </section>
 
     <!-- Results Section -->
-    <section class="section" id="ergebnisse">
-        <div class="container-xl">
+    <section class="py-20" id="ergebnisse">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <h2 class="text-4xl font-bold mb-4">Ergebnisse, nicht nur Aufwand</h2>
                 <p class="text-xl text-gray-600">Messbare Verbesserungen durch systematischen Ansatz</p>
@@ -252,21 +252,21 @@
             
             <!-- Testimonials -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="testimonial-card">
+                <div class="bg-white rounded-xl shadow-sm p-6">
                     <p class="text-gray-700 mb-4">
                         "Plan klar, Produktion pünktlich – endlich konsistent."
                     </p>
                     <p class="text-sm text-gray-500">– Kunde A</p>
                 </div>
                 
-                <div class="testimonial-card">
+                <div class="bg-white rounded-xl shadow-sm p-6">
                     <p class="text-gray-700 mb-4">
                         "Videoloops steigern Wiedererkennung spürbar."
                     </p>
                     <p class="text-sm text-gray-500">– Kunde B</p>
                 </div>
                 
-                <div class="testimonial-card">
+                <div class="bg-white rounded-xl shadow-sm p-6">
                     <p class="text-gray-700 mb-4">
                         "WhatsApp-Freigaben sparen uns Meetings."
                     </p>
@@ -277,8 +277,8 @@
     </section>
 
     <!-- Pricing Section -->
-    <section id="preise" class="section section-alt">
-        <div class="container-xl">
+    <section id="preise" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <h2 class="text-4xl font-bold mb-4">Preisübersicht</h2>
                 <p class="text-xl text-gray-600">Wählen Sie das Paket, das zu Ihren Zielen passt</p>
@@ -286,7 +286,7 @@
             
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
                 <!-- Paket 1: System Start -->
-                <div class="pricing-card p-8 text-center">
+                <div class="bg-white rounded-xl shadow-sm p-8 text-center">
                     <div class="mb-6">
                         <h3 class="text-2xl font-bold mb-2">System Start</h3>
                         <p class="text-gray-600 mb-4">Für wen: Klarer Einstieg mit Planung & Automatisierung.</p>
@@ -332,13 +332,13 @@
                         </li>
                     </ul>
                     
-                    <a href="/auth/login" class="btn btn-primary btn-full">
+                    <a href="/auth/login" class="inline-block w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium text-center">
                         Mit System Start loslegen
                     </a>
                 </div>
                 
                 <!-- Paket 2: Wachstum Pro -->
-                <div class="pricing-card p-8 text-center border-2 border-blue-500 relative">
+                <div class="bg-white rounded-xl shadow-sm p-8 text-center border-2 border-blue-500 relative">
                     <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
                         <span class="bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-semibold">Empfohlen</span>
                     </div>
@@ -394,13 +394,13 @@
                         </li>
                     </ul>
                     
-                    <a href="/auth/login" class="btn btn-primary btn-full">
+                    <a href="/auth/login" class="inline-block w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium text-center">
                         Wachstum aktivieren
                     </a>
                 </div>
                 
                 <!-- Paket 3: Scale Suite -->
-                <div class="pricing-card p-8 text-center">
+                <div class="bg-white rounded-xl shadow-sm p-8 text-center">
                     <div class="mb-6">
                         <h3 class="text-2xl font-bold mb-2">Scale Suite</h3>
                         <p class="text-gray-600 mb-4">Für wen: Vollpaket für Tempo & Skalierung.</p>
@@ -440,7 +440,7 @@
                         </li>
                     </ul>
                     
-                    <a href="/auth/login" class="btn btn-primary btn-full">
+                    <a href="/auth/login" class="inline-block w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium text-center">
                         Jetzt skalieren
                     </a>
                 </div>
@@ -456,8 +456,8 @@
     </section>
 
     <!-- Add-ons Section -->
-    <section class="section">
-        <div class="container-xl">
+    <section class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-bold mb-4">Add-ons</h2>
                 <p class="text-gray-600">Erweitern Sie Ihr Paket nach Bedarf</p>
@@ -481,8 +481,8 @@
     </section>
 
     <!-- FAQ Section -->
-    <section id="faq" class="section section-alt">
-        <div class="container-xl">
+    <section id="faq" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <h2 class="text-4xl font-bold mb-4">Häufig gestellte Fragen</h2>
                 <p class="text-xl text-gray-600">Alles was Sie wissen müssen</p>
@@ -490,8 +490,8 @@
             
             <div class="max-w-4xl mx-auto space-y-6">
                 <!-- FAQ Item 1 -->
-                <div class="card">
-                    <div class="card-body">
+                <div class="bg-white rounded-xl shadow-sm">
+                    <div class="p-6">
                         <h3 class="text-lg font-semibold mb-3">Wie läuft das Onboarding?</h3>
                         <p class="text-gray-600">
                             Kickoff-Call (30 Min.), Accounts verbinden, Strategieprofil definieren, Redaktionskalender starten. Erste Inhalte in Woche 1.
@@ -500,8 +500,8 @@
                 </div>
                 
                 <!-- FAQ Item 2 -->
-                <div class="card">
-                    <div class="card-body">
+                <div class="bg-white rounded-xl shadow-sm">
+                    <div class="p-6">
                         <h3 class="text-lg font-semibold mb-3">Wie werden Videoloops erstellt?</h3>
                         <p class="text-gray-600">
                             Es wird ein Link zum Beitrag gesendet; daraus werden automatisch 5-Sekunden-Loops generiert und in den Plan übernommen.
@@ -510,8 +510,8 @@
                 </div>
                 
                 <!-- FAQ Item 3 -->
-                <div class="card">
-                    <div class="card-body">
+                <div class="bg-white rounded-xl shadow-sm">
+                    <div class="p-6">
                         <h3 class="text-lg font-semibold mb-3">Wie erfolgen Freigaben?</h3>
                         <p class="text-gray-600">
                             Direkt im WhatsApp-KosmaMedia-Bot oder im Planer (Kommentar/Status).
@@ -520,8 +520,8 @@
                 </div>
                 
                 <!-- FAQ Item 4 -->
-                <div class="card">
-                    <div class="card-body">
+                <div class="bg-white rounded-xl shadow-sm">
+                    <div class="p-6">
                         <h3 class="text-lg font-semibold mb-3">Wie viele Revisionen sind enthalten?</h3>
                         <p class="text-gray-600">
                             Pro Video eine Korrekturschleife (Text/Timing/Grafik), weitere als Add-on.
@@ -530,8 +530,8 @@
                 </div>
                 
                 <!-- FAQ Item 5 -->
-                <div class="card">
-                    <div class="card-body">
+                <div class="bg-white rounded-xl shadow-sm">
+                    <div class="p-6">
                         <h3 class="text-lg font-semibold mb-3">Wem gehören die Inhalte?</h3>
                         <p class="text-gray-600">
                             Vollständige Nutzungsrechte für die produzierten Inhalte nach Zahlungseingang.
@@ -540,8 +540,8 @@
                 </div>
                 
                 <!-- FAQ Item 6 -->
-                <div class="card">
-                    <div class="card-body">
+                <div class="bg-white rounded-xl shadow-sm">
+                    <div class="p-6">
                         <h3 class="text-lg font-semibold mb-3">Kündigungsfrist & Pause?</h3>
                         <p class="text-gray-600">
                             Monatlich kündbar, pausierbar zum Monatsende.
@@ -550,8 +550,8 @@
                 </div>
                 
                 <!-- FAQ Item 7 -->
-                <div class="card">
-                    <div class="card-body">
+                <div class="bg-white rounded-xl shadow-sm">
+                    <div class="p-6">
                         <h3 class="text-lg font-semibold mb-3">DSGVO & Datenhaltung?</h3>
                         <p class="text-gray-600">
                             Verarbeitung gemäß DSGVO; Zugriff nur für Produktionszwecke, Löschung auf Wunsch möglich.
@@ -560,8 +560,8 @@
                 </div>
                 
                 <!-- FAQ Item 8 -->
-                <div class="card">
-                    <div class="card-body">
+                <div class="bg-white rounded-xl shadow-sm">
+                    <div class="p-6">
                         <h3 class="text-lg font-semibold mb-3">Welche Plattformen werden unterstützt?</h3>
                         <p class="text-gray-600">
                             Instagram, TikTok, YouTube (Shorts), LinkedIn, Facebook (weitere auf Anfrage).
@@ -573,8 +573,8 @@
     </section>
 
     <!-- Final CTA Section -->
-    <section class="section">
-        <div class="container-sm text-center">
+    <section class="py-20">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 class="text-4xl font-bold mb-6">
                 Bereit, Social Media zu systematisieren?
             </h2>
@@ -582,10 +582,10 @@
                 Wählen Sie Ihr Paket und starten Sie diese Woche.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#preise" class="btn btn-primary btn-lg">
+                <a href="#preise" class="bg-blue-600 text-white px-8 py-4 rounded-lg hover:bg-blue-700 transition-colors font-semibold text-lg">
                     Jetzt starten
                 </a>
-                <a href="#beratung" class="btn btn-secondary btn-lg">
+                <a href="#beratung" class="bg-white text-blue-600 px-8 py-4 rounded-lg hover:bg-gray-50 transition-colors font-semibold text-lg border-2 border-blue-600">
                     Beratungsgespräch buchen
                 </a>
             </div>
@@ -593,11 +593,11 @@
     </section>
 
     <!-- Footer -->
-    <footer class="footer py-12 px-6">
-        <div class="container-xl">
+    <footer class="bg-gray-900 text-white py-12 px-6">
+        <div class="max-w-7xl mx-auto">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
                 <div>
-                    <div class="logo mb-4">
+                    <div class="flex items-center space-x-3 mb-4">
                         <div class="logo-icon">
                             <div class="logo-icon-inner"></div>
                         </div>

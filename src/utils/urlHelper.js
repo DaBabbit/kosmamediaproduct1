@@ -21,9 +21,20 @@ const getCurrentUrl = (req) => {
 
 const getAuthUrls = (req) => {
     const baseUrl = getCurrentUrl(req);
+    
+    // Für Passwort-Reset verwenden wir die aktuelle Domain
+    const resetPasswordUrl = `${baseUrl}/auth/reset-password`;
+    
+    console.log('🔗 Auth-URLs generiert:', {
+        baseUrl,
+        resetPasswordUrl,
+        headers: req?.headers?.host,
+        protocol: req?.headers?.['x-forwarded-proto'] || req?.protocol
+    });
+    
     return {
         confirm: `${baseUrl}/auth/confirm`,
-        resetPassword: `${baseUrl}/auth/reset-password`,
+        resetPassword: resetPasswordUrl,
         login: `${baseUrl}/auth/login`,
         register: `${baseUrl}/auth/register`
     };

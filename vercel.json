@@ -20,6 +20,14 @@
       "dest": "/src/public/images/$1"
     },
     {
+      "src": "/auth/(.*)",
+      "dest": "src/app.js"
+    },
+    {
+      "src": "/dashboard/(.*)",
+      "dest": "src/app.js"
+    },
+    {
       "src": "/(.*)",
       "dest": "src/app.js"
     }

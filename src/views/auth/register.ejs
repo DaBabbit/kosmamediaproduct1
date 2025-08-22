@@ -9,32 +9,34 @@
     <link href="/css/main.css" rel="stylesheet">
     <link href="/css/landing.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-gray-50">
     <!-- Navigation Bar -->
-    <nav class="navbar px-6 py-4">
-        <div class="container-xl flex items-center justify-between">
-            <!-- Logo -->
-            <div class="logo">
-                <div class="logo-icon">
-                    <div class="logo-icon-inner"></div>
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                        <div class="w-4 h-4 bg-white rounded"></div>
+                    </div>
+                    <span class="text-xl font-bold text-gray-900">KosmaMedia</span>
                 </div>
-                <span class="text-xl font-bold">KosmaMedia</span>
-            </div>
-            
-            <!-- CTA Buttons -->
-            <div class="flex items-center gap-4">
-                <a href="/" class="nav-link">Zurück zur Startseite</a>
-                <a href="/auth/login" class="btn btn-secondary">Bereits angemeldet?</a>
+                
+                <!-- CTA Buttons -->
+                <div class="flex items-center gap-4">
+                    <a href="/" class="text-blue-600 hover:text-blue-700 font-medium">Zurück zur Startseite</a>
+                    <a href="/auth/login" class="btn btn-outline btn-sm">Bereits angemeldet?</a>
+                </div>
             </div>
         </div>
     </nav>
 
     <!-- Main Content -->
     <div class="min-h-screen flex items-center justify-center py-12 px-6">
-        <div class="container-sm">
-            <div class="card p-8">
+        <div class="w-full max-w-md">
+            <div class="bg-white rounded-lg shadow-lg p-8">
                 <div class="text-center mb-6">
-                    <h3 class="text-2xl font-bold mb-2">Konto erstellen</h3>
+                    <h3 class="text-2xl font-bold mb-2 text-gray-900">Konto erstellen</h3>
                     <p class="text-gray-600">Erstellen Sie Ihr KosmaMedia-Konto</p>
                 </div>
                 
@@ -68,81 +70,79 @@
                 
                 <!-- Registrierungs-Formular -->
                 <form action="/auth/register" method="POST" class="space-y-4">
-                    <div class="form-group">
-                        <label class="form-label">
-                            E-Mail-Adresse
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-medium text-gray-700">E-Mail-Adresse</span>
                         </label>
                         <input 
                             type="email" 
                             name="email" 
                             placeholder="ihre@email.com" 
-                            class="form-input"
+                            class="input input-bordered w-full"
                             required
                         />
                     </div>
                     
-                    <div class="form-group">
-                        <label class="form-label">
-                            Passwort
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-medium text-gray-700">Passwort</span>
                         </label>
                         <input 
                             type="password" 
                             name="password" 
                             placeholder="Mindestens 6 Zeichen" 
-                            class="form-input"
+                            class="input input-bordered w-full"
                             minlength="6"
                             required
                         />
                         <p class="text-sm text-gray-500 mt-1">Das Passwort muss mindestens 6 Zeichen lang sein</p>
                     </div>
                     
-                    <div class="form-group">
-                        <label class="form-label">
-                            Passwort bestätigen
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-medium text-gray-700">Passwort bestätigen</span>
                         </label>
                         <input 
                             type="password" 
                             name="confirmPassword" 
                             placeholder="Passwort wiederholen" 
-                            class="form-input"
+                            class="input input-bordered w-full"
                             minlength="6"
                             required
                         />
                     </div>
                     
-                    <div class="flex items-center space-x-2">
-                        <input type="checkbox" name="terms" class="checkbox checkbox-sm" required />
-                        <span class="text-sm text-gray-600">
-                            Ich akzeptiere die <a href="/agb" class="text-blue-600 hover:text-blue-700">AGB</a> und 
-                            <a href="/datenschutz" class="text-blue-600 hover:text-blue-700">Datenschutzerklärung</a>
-                        </span>
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                            <input type="checkbox" name="terms" class="checkbox checkbox-primary" required />
+                            <span class="label-text ml-3">
+                                Ich akzeptiere die 
+                                <a href="#" class="text-blue-600 hover:text-blue-700">AGB</a> 
+                                und 
+                                <a href="#" class="text-blue-600 hover:text-blue-700">Datenschutzerklärung</a>
+                            </span>
+                        </label>
                     </div>
                     
-                    <button type="submit" class="btn btn-primary btn-full">
+                    <button type="submit" class="btn btn-primary w-full">
                         Konto erstellen
                     </button>
                 </form>
                 
-                <div class="divider text-gray-400">oder</div>
+                <div class="divider">oder</div>
                 
                 <div class="text-center">
-                    <p class="text-gray-600 text-sm mb-4">
-                        Bereits ein Konto?
-                    </p>
-                    <a href="/auth/login" class="btn btn-outline btn-full">
+                    <p class="text-gray-600 mb-2">Bereits ein Konto?</p>
+                    <a href="/auth/login" class="btn btn-outline btn-sm w-full">
                         Anmelden
                     </a>
                 </div>
                 
                 <div class="text-center mt-6">
-                    <p class="text-gray-600 text-sm">
-                        <a href="/" class="text-blue-600 hover:text-blue-700 font-medium">Zurück zur Startseite</a>
-                    </p>
+                    <a href="/" class="text-blue-600 hover:text-blue-700 text-sm">Zurück zur Startseite</a>
                 </div>
             </div>
         </div>
     </div>
-
-
 </body>
 </html>

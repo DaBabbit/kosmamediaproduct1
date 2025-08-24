@@ -258,8 +258,9 @@ router.post('/forgot-password', async (req, res) => {
         }
 
         // Supabase Passwort zurücksetzen (PKCE-Flow)
+        const baseUrl = process.env.SITE_URL || (req.get('host') ? `https://${req.get('host')}` : 'http://localhost:3000');
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${getBaseUrl()}/auth/confirm?redirectUrl=${encodeURIComponent(getBaseUrl() + '/auth/change-password')}`
+            redirectTo: `${baseUrl}/auth/confirm?redirectUrl=${encodeURIComponent(baseUrl + '/auth/change-password')}`
         });
 
         console.log('Passwort-Reset-E-Mail gesendet an:', email);

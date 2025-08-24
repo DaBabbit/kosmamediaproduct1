@@ -257,29 +257,134 @@ router.post('/forgot-password', async (req, res) => {
             return res.redirect('/auth/forgot-password?error=Bitte geben Sie Ihre E-Mail-Adresse ein');
         }
 
-        // Supabase Passwort zurücksetzen (PKCE-Flow)
+        logger.auth('Passwort-Reset-Versuch gestartet', { email });
+
+        // SCHRITT 1: Prüfe ob die E-Mail-Adresse bereits registriert ist
+        logger.auth('Prüfe E-Mail-Registrierung', { email });
+        
+        try {
+            // Versuche einen User mit dieser E-Mail zu finden
+            // Da wir keinen Admin-Zugriff haben, versuchen wir einen Login mit einem Dummy-Passwort
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: 'dummy_password_for_validation'
+            });
+            
+            if (error) {
+                if (error.message.includes('Invalid login credentials') || error.message.includes('Invalid email or password')) {
+                    // E-Mail existiert, aber Passwort ist falsch - das ist gut!
+                    logger.auth('E-Mail-Adresse existiert (Passwort-Reset möglich)', { email });
+                } else if (error.message.includes('Email not confirmed')) {
+                    // E-Mail existiert, aber ist nicht bestätigt
+                    logger.warn('E-Mail-Adresse nicht bestätigt', { email });
+                    return res.redirect('/auth/forgot-password?error=Diese E-Mail-Adresse ist noch nicht bestätigt. Bitte bestätigen Sie zuerst Ihre E-Mail-Adresse.');
+                } else if (error.message.includes('User not found') || error.message.includes('Invalid email')) {
+                    // E-Mail existiert nicht
+                    logger.warn('E-Mail-Adresse nicht registriert', { email });
+                    return res.redirect('/auth/forgot-password?error=Diese E-Mail-Adresse ist nicht registriert. Bitte registrieren Sie sich zuerst oder verwenden Sie eine andere E-Mail-Adresse.');
+                } else {
+                    // Unbekannter Fehler - trotzdem versuchen
+                    logger.warn('Unbekannter Fehler bei E-Mail-Validierung', { 
+                        error: error.message,
+                        email 
+                    });
+                }
+            } else {
+                // User ist eingeloggt - das sollte nicht passieren
+                logger.warn('User bereits eingeloggt bei Passwort-Reset', { 
+                    email,
+                    userId: data.user?.id 
+                });
+                
+                // User wieder ausloggen
+                await supabase.auth.signOut();
+            }
+        } catch (validationError) {
+            logger.warn('E-Mail-Validierung fehlgeschlagen', { 
+                error: validationError.message,
+                email 
+            });
+            // Fallback: E-Mail trotzdem senden
+        }
+
+        // SCHRITT 2: Supabase Passwort zurücksetzen (PKCE-Flow)
+        logger.auth('Sende Passwort-Reset-E-Mail', { email });
+        
         const baseUrl = process.env.SITE_URL || (req.get('host') ? `https://${req.get('host')}` : 'http://localhost:3000');
         
-        // WICHTIG: Supabase sendet den Code als Hash-Fragment, nicht als Query-Parameter
-        // Wir müssen eine spezielle Route verwenden, die den Hash ausliest
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
             redirectTo: `${baseUrl}/auth/reset-password`
         });
 
-        console.log('Passwort-Reset-E-Mail gesendet an:', email);
-        console.log('Redirect-URL:', getAuthUrls(req).resetPassword);
-
         if (error) {
-            console.error('Passwort-Reset-Fehler:', error.message);
-            return res.redirect('/auth/forgot-password?error=Fehler beim Senden der E-Mail');
+            logger.error('Passwort-Reset-Fehler', { 
+                error: error.message,
+                email 
+            });
+            return res.redirect('/auth/forgot-password?error=Fehler beim Senden der E-Mail: ' + error.message);
         }
 
-        console.log(`✅ Passwort-Reset-E-Mail an ${email} gesendet`);
-        res.redirect('/auth/login?success=E-Mail zum Zurücksetzen des Passworts wurde gesendet');
+        logger.auth('Passwort-Reset-E-Mail erfolgreich gesendet', { 
+            email,
+            redirectUrl: `${baseUrl}/auth/reset-password`
+        });
+
+        res.redirect('/auth/login?success=E-Mail zum Zurücksetzen des Passworts wurde gesendet. Bitte prüfen Sie Ihren Posteingang.');
 
     } catch (error) {
-        console.error('Passwort-Reset-Route Fehler:', error);
-        res.redirect('/auth/forgot-password?error=Ein Fehler ist aufgetreten');
+        logger.error('Passwort-Reset-Route Fehler', { 
+            error: error.message,
+            email: req.body?.email 
+        });
+        res.redirect('/auth/forgot-password?error=Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
+    }
+});
+
+// GET /auth/logout - Benutzer abmelden
+router.get('/logout', async (req, res) => {
+    try {
+        logger.auth('Logout-Versuch gestartet', {
+            sessionId: req.sessionID,
+            userId: req.session.userId,
+            userEmail: req.session.userEmail
+        });
+
+        // Supabase Session beenden
+        const { error } = await supabase.auth.signOut();
+        if (error) {
+            logger.error('Supabase Logout-Fehler', { error: error.message });
+        } else {
+            logger.auth('Supabase Logout erfolgreich');
+        }
+
+        // Express Session löschen
+        req.session.destroy((err) => {
+            if (err) {
+                logger.error('Express Session-Löschung fehlgeschlagen', { error: err.message });
+            } else {
+                logger.auth('Express Session erfolgreich gelöscht');
+            }
+        });
+
+        // Cookies löschen
+        res.clearCookie('sb-access-token');
+        res.clearCookie('sb-refresh-token');
+        res.clearCookie('kosmamedia-session');
+
+        logger.auth('Logout erfolgreich abgeschlossen', {
+            sessionId: req.sessionID,
+            cookiesCleared: true
+        });
+
+        // Zurück zur Login-Seite
+        res.redirect('/auth/login?success=Sie wurden erfolgreich abgemeldet');
+
+    } catch (error) {
+        logger.error('Logout-Route Fehler', { 
+            error: error.message,
+            sessionId: req.sessionID 
+        });
+        res.redirect('/auth/login?error=Fehler beim Abmelden');
     }
 });
 

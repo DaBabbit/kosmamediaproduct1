@@ -31,7 +31,8 @@ router.get('/', requireAuth, (req, res) => {
 
     res.render('dashboard/index', {
         title: 'Dashboard',
-        user: req.user
+        user: req.user,
+        userEmail: req.user.email
     });
 });
 

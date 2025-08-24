@@ -260,7 +260,7 @@ router.post('/forgot-password', async (req, res) => {
         // Supabase Passwort zurücksetzen (PKCE-Flow)
         const baseUrl = process.env.SITE_URL || (req.get('host') ? `https://${req.get('host')}` : 'http://localhost:3000');
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${baseUrl}/auth/confirm?redirectUrl=${encodeURIComponent(baseUrl + '/auth/change-password')}`
+            redirectTo: `${baseUrl}/auth/confirm?redirectUrl=${encodeURIComponent(baseUrl + '/auth/reset-password')}`
         });
 
         console.log('Passwort-Reset-E-Mail gesendet an:', email);
@@ -280,52 +280,50 @@ router.post('/forgot-password', async (req, res) => {
     }
 });
 
-// GET /auth/confirm - PKCE-Flow für Passwort-Reset (token_hash)
+// GET /auth/confirm - PKCE-Flow für Passwort-Reset (code)
 router.get('/confirm', async (req, res) => {
     try {
-        const { token_hash, type, redirectUrl } = req.query;
+        const { code, redirectUrl } = req.query;
 
         logger.info('🔐 [PKCE-CONFIRM] Bestätigung gestartet', {
-            token_hash: token_hash ? 'PRESENT' : 'MISSING',
-            type,
+            code: code ? 'PRESENT' : 'MISSING',
             redirectUrl,
             userAgent: req.get('User-Agent')
         });
 
-        if (!token_hash || type !== 'email') {
-            logger.warn('❌ [PKCE-CONFIRM] Ungültige Parameter', { token_hash, type });
+        if (!code) {
+            logger.warn('❌ [PKCE-CONFIRM] Kein Code-Parameter', { query: req.query });
             return res.redirect('/auth/login?error=Ungültiger Bestätigungslink');
         }
 
         try {
-            // Token mit verifyOtp bestätigen (loggt User automatisch ein)
-            const { data, error } = await supabase.auth.verifyOtp({
-                token_hash,
-                type: 'email'
-            });
+            // Code gegen Session austauschen (wie in deinem Code)
+            const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
-            if (error) {
-                logger.error('❌ [PKCE-CONFIRM] verifyOtp fehlgeschlagen', { error: error.message });
+            if (error || !data?.session) {
+                logger.error('❌ [PKCE-CONFIRM] exchangeCodeForSession fehlgeschlagen', { error: error.message });
                 return res.redirect('/auth/login?error=Bestätigung fehlgeschlagen: ' + error.message);
             }
 
-            if (data.user) {
+            if (data.session?.user) {
                 logger.info('✅ [PKCE-CONFIRM] User erfolgreich eingeloggt', {
-                    userId: data.user.id,
-                    email: data.user.email
+                    userId: data.session.user.id,
+                    email: data.session.user.email
                 });
 
                 // Session setzen
-                req.session.userId = data.user.id;
-                req.session.userEmail = data.user.email;
+                req.session.userId = data.session.user.id;
+                req.session.userEmail = data.session.user.email;
                 
-                // Weiterleitung basierend auf redirectUrl oder Standard
-                const finalRedirect = redirectUrl || '/dashboard';
-                logger.info('🔄 [PKCE-CONFIRM] Weiterleitung', { to: finalRedirect });
+                // Weiterleitung zur Passwort-Änderungsseite mit Tokens
+                const { access_token, refresh_token } = data.session;
+                const finalRedirect = redirectUrl || '/auth/reset-password';
                 
-                return res.redirect(finalRedirect);
+                logger.info('🔄 [PKCE-CONFIRM] Weiterleitung mit Tokens', { to: finalRedirect });
+                
+                return res.redirect(`${finalRedirect}?access_token=${access_token}&refresh_token=${refresh_token}`);
             } else {
-                logger.warn('⚠️ [PKCE-CONFIRM] Kein User in der Antwort');
+                logger.warn('⚠️ [PKCE-CONFIRM] Keine Session in der Antwort');
                 return res.redirect('/auth/login?error=Bestätigung unvollständig');
             }
 

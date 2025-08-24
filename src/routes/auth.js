@@ -257,9 +257,9 @@ router.post('/forgot-password', async (req, res) => {
             return res.redirect('/auth/forgot-password?error=Bitte geben Sie Ihre E-Mail-Adresse ein');
         }
 
-        // Supabase Passwort zurücksetzen
+        // Supabase Passwort zurücksetzen (PKCE-Flow)
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: getAuthUrls(req).resetPassword
+            redirectTo: `${getBaseUrl()}/auth/confirm?redirectUrl=${encodeURIComponent(getBaseUrl() + '/auth/change-password')}`
         });
 
         console.log('Passwort-Reset-E-Mail gesendet an:', email);
@@ -279,115 +279,66 @@ router.post('/forgot-password', async (req, res) => {
     }
 });
 
-// GET /auth/confirm - E-Mail-Bestätigung
+// GET /auth/confirm - PKCE-Flow für Passwort-Reset (token_hash)
 router.get('/confirm', async (req, res) => {
     try {
-        // Supabase sendet verschiedene Parameter je nach Konfiguration
-        const { token_hash, type, access_token, refresh_token } = req.query;
+        const { token_hash, type, redirectUrl } = req.query;
 
-        logger.auth('E-Mail-Bestätigung gestartet', {
-            query: req.query,
-            headers: req.headers,
-            url: req.url,
-            method: req.method,
+        logger.info('🔐 [PKCE-CONFIRM] Bestätigung gestartet', {
+            token_hash: token_hash ? 'PRESENT' : 'MISSING',
+            type,
+            redirectUrl,
             userAgent: req.get('User-Agent')
         });
 
-        logger.debug('E-Mail-Bestätigung Query-Parameter', {
-            token_hash,
-            type,
-            access_token: access_token ? 'PRESENT' : 'MISSING',
-            refresh_token: refresh_token ? 'PRESENT' : 'MISSING',
-            allParams: Object.keys(req.query),
-            fullQuery: req.query
-        });
+        if (!token_hash || type !== 'email') {
+            logger.warn('❌ [PKCE-CONFIRM] Ungültige Parameter', { token_hash, type });
+            return res.redirect('/auth/login?error=Ungültiger Bestätigungslink');
+        }
 
-        // Prüfe verschiedene mögliche Parameter-Kombinationen
-        if (token_hash || access_token || refresh_token || type === 'email_confirmation') {
-            const confirmToken = token_hash || access_token;
-
-            logger.auth('OTP-Verifikation gestartet', {
-                tokenType: token_hash ? 'token_hash' : 'access_token',
-                tokenLength: confirmToken ? confirmToken.length : 0,
-                type
+        try {
+            // Token mit verifyOtp bestätigen (loggt User automatisch ein)
+            const { data, error } = await supabase.auth.verifyOtp({
+                token_hash,
+                type: 'email'
             });
 
-            try {
-                const { data, error } = await supabase.auth.verifyOtp({
-                    token_hash: confirmToken,
-                    type: 'email_confirmation'
-                });
-
-                if (error) {
-                    logger.error('OTP-Verifikation fehlgeschlagen', {
-                        error: error.message,
-                        errorCode: error.status,
-                        tokenType: token_hash ? 'token_hash' : 'access_token',
-                        type,
-                        fullError: error
-                    });
-                    return res.redirect('/auth/login?error=E-Mail-Bestätigung fehlgeschlagen: ' + error.message);
-                }
-
-                if (data.user) {
-                    logger.auth('E-Mail-Bestätigung erfolgreich', {
-                        userId: data.user.id,
-                        email: data.user.email,
-                        emailConfirmed: data.user.email_confirmed_at,
-                        createdAt: data.user.created_at,
-                        lastSignIn: data.user.last_sign_in_at
-                    });
-
-                    logger.redirect('Weiterleitung nach E-Mail-Bestätigung', {
-                        from: '/auth/confirm',
-                        to: '/auth/login?success=E-Mail erfolgreich bestätigt! Sie können sich jetzt anmelden.',
-                        userId: data.user.id
-                    });
-
-                    res.redirect('/auth/login?success=E-Mail erfolgreich bestätigt! Sie können sich jetzt anmelden.');
-                } else {
-                    logger.error('E-Mail-Bestätigung fehlgeschlagen: Keine User-Daten', {
-                        data,
-                        tokenType: token_hash ? 'token_hash' : 'access_token',
-                        type
-                    });
-                    res.redirect('/auth/login?error=E-Mail-Bestätigung fehlgeschlagen');
-                }
-            } catch (verifyError) {
-                logger.error('OTP-Verifikation unerwarteter Fehler', {
-                    error: verifyError.message,
-                    stack: verifyError.stack,
-                    tokenType: token_hash ? 'token_hash' : 'access_token',
-                    type
-                });
-                res.redirect('/auth/login?error=E-Mail-Bestätigung fehlgeschlagen');
+            if (error) {
+                logger.error('❌ [PKCE-CONFIRM] verifyOtp fehlgeschlagen', { error: error.message });
+                return res.redirect('/auth/login?error=Bestätigung fehlgeschlagen: ' + error.message);
             }
-        } else {
-            logger.warn('E-Mail-Bestätigung: Keine gültigen Parameter', {
-                query: req.query,
-                headers: req.headers,
-                url: req.url
-            });
 
-            logger.redirect('Weiterleitung ohne Parameter', {
-                from: '/auth/confirm',
-                to: '/auth/login?success=E-Mail-Bestätigung erfolgreich! Sie können sich jetzt anmelden.',
-                reason: 'Keine gültigen Parameter'
-            });
+            if (data.user) {
+                logger.info('✅ [PKCE-CONFIRM] User erfolgreich eingeloggt', {
+                    userId: data.user.id,
+                    email: data.user.email
+                });
 
-            // Wenn keine spezifischen Parameter vorhanden sind, zur Login-Seite weiterleiten
-            res.redirect('/auth/login?success=E-Mail-Bestätigung erfolgreich! Sie können sich jetzt anmelden.');
+                // Session setzen
+                req.session.userId = data.user.id;
+                req.session.userEmail = data.user.email;
+                
+                // Weiterleitung basierend auf redirectUrl oder Standard
+                const finalRedirect = redirectUrl || '/dashboard';
+                logger.info('🔄 [PKCE-CONFIRM] Weiterleitung', { to: finalRedirect });
+                
+                return res.redirect(finalRedirect);
+            } else {
+                logger.warn('⚠️ [PKCE-CONFIRM] Kein User in der Antwort');
+                return res.redirect('/auth/login?error=Bestätigung unvollständig');
+            }
+
+        } catch (error) {
+            logger.error('💥 [PKCE-CONFIRM] Unerwarteter Fehler', { error: error.message });
+            return res.redirect('/auth/login?error=Technischer Fehler bei der Bestätigung');
         }
     } catch (error) {
-        logger.error('E-Mail-Bestätigung Route unerwarteter Fehler', {
-            error: error.message,
-            stack: error.stack,
-            query: req.query,
-            url: req.url
-        });
-        res.redirect('/auth/login?error=Ein Fehler ist aufgetreten');
+        logger.error('💥 [PKCE-CONFIRM] Route unerwarteter Fehler', { error: error.message });
+        return res.redirect('/auth/login?error=Technischer Fehler bei der Bestätigung');
     }
 });
+
+
 
 // GET /auth/reset-password - Passwort zurücksetzen (mit Token)
 router.get('/reset-password', async (req, res) => {

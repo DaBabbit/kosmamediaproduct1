@@ -280,59 +280,96 @@ router.post('/forgot-password', async (req, res) => {
     }
 });
 
-// GET /auth/confirm - PKCE-Flow für Passwort-Reset (code)
+// GET /auth/confirm - Unterstützt beide Flows: PKCE (code) und Legacy (token_hash)
 router.get('/confirm', async (req, res) => {
     try {
-        const { code, redirectUrl } = req.query;
+        const { code, token_hash, type, redirectUrl } = req.query;
 
-        logger.info('🔐 [PKCE-CONFIRM] Bestätigung gestartet', {
+        logger.info('🔐 [AUTH-CONFIRM] Bestätigung gestartet', {
             code: code ? 'PRESENT' : 'MISSING',
+            token_hash: token_hash ? 'PRESENT' : 'MISSING',
+            type,
             redirectUrl,
             userAgent: req.get('User-Agent')
         });
 
-        if (!code) {
-            logger.warn('❌ [PKCE-CONFIRM] Kein Code-Parameter', { query: req.query });
-            return res.redirect('/auth/login?error=Ungültiger Bestätigungslink');
-        }
+        // PKCE-Flow (mit code Parameter)
+        if (code) {
+            try {
+                logger.info('🔄 [AUTH-CONFIRM] PKCE-Flow gestartet');
+                const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
-        try {
-            // Code gegen Session austauschen (wie in deinem Code)
-            const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+                if (error || !data?.session) {
+                    logger.error('❌ [AUTH-CONFIRM] exchangeCodeForSession fehlgeschlagen', { error: error.message });
+                    return res.redirect('/auth/login?error=Bestätigung fehlgeschlagen: ' + error.message);
+                }
 
-            if (error || !data?.session) {
-                logger.error('❌ [PKCE-CONFIRM] exchangeCodeForSession fehlgeschlagen', { error: error.message });
-                return res.redirect('/auth/login?error=Bestätigung fehlgeschlagen: ' + error.message);
+                if (data.session?.user) {
+                    logger.info('✅ [AUTH-CONFIRM] PKCE-Flow erfolgreich', {
+                        userId: data.session.user.id,
+                        email: data.session.user.email
+                    });
+
+                    // Session setzen
+                    req.session.userId = data.session.user.id;
+                    req.session.userEmail = data.session.user.email;
+                    
+                    // Weiterleitung zur Passwort-Änderungsseite mit Tokens
+                    const { access_token, refresh_token } = data.session;
+                    const finalRedirect = redirectUrl || '/auth/reset-password';
+                    
+                    logger.info('🔄 [AUTH-CONFIRM] Weiterleitung mit Tokens', { to: finalRedirect });
+                    
+                    return res.redirect(`${finalRedirect}?access_token=${access_token}&refresh_token=${refresh_token}`);
+                }
+            } catch (error) {
+                logger.error('💥 [AUTH-CONFIRM] PKCE-Flow Fehler', { error: error.message });
+                return res.redirect('/auth/login?error=Technischer Fehler bei der Bestätigung');
             }
-
-            if (data.session?.user) {
-                logger.info('✅ [PKCE-CONFIRM] User erfolgreich eingeloggt', {
-                    userId: data.session.user.id,
-                    email: data.session.user.email
+        }
+        
+        // Legacy-Flow (mit token_hash)
+        else if (token_hash && type === 'email') {
+            try {
+                logger.info('🔄 [AUTH-CONFIRM] Legacy-Flow gestartet');
+                const { data, error } = await supabase.auth.verifyOtp({
+                    token_hash,
+                    type: 'email'
                 });
 
-                // Session setzen
-                req.session.userId = data.session.user.id;
-                req.session.userEmail = data.session.user.email;
-                
-                // Weiterleitung zur Passwort-Änderungsseite mit Tokens
-                const { access_token, refresh_token } = data.session;
-                const finalRedirect = redirectUrl || '/auth/reset-password';
-                
-                logger.info('🔄 [PKCE-CONFIRM] Weiterleitung mit Tokens', { to: finalRedirect });
-                
-                return res.redirect(`${finalRedirect}?access_token=${access_token}&refresh_token=${refresh_token}`);
-            } else {
-                logger.warn('⚠️ [PKCE-CONFIRM] Keine Session in der Antwort');
-                return res.redirect('/auth/login?error=Bestätigung unvollständig');
-            }
+                if (error) {
+                    logger.error('❌ [AUTH-CONFIRM] verifyOtp fehlgeschlagen', { error: error.message });
+                    return res.redirect('/auth/login?error=Bestätigung fehlgeschlagen: ' + error.message);
+                }
 
-        } catch (error) {
-            logger.error('💥 [PKCE-CONFIRM] Unerwarteter Fehler', { error: error.message });
-            return res.redirect('/auth/login?error=Technischer Fehler bei der Bestätigung');
+                if (data.user) {
+                    logger.info('✅ [AUTH-CONFIRM] Legacy-Flow erfolgreich', {
+                        userId: data.user.id,
+                        email: data.user.email
+                    });
+
+                    // Session setzen
+                    req.session.userId = data.user.id;
+                    req.session.userEmail = data.user.email;
+                    
+                    // Weiterleitung
+                    const finalRedirect = redirectUrl || '/dashboard';
+                    logger.info('🔄 [AUTH-CONFIRM] Weiterleitung', { to: finalRedirect });
+                    
+                    return res.redirect(finalRedirect);
+                }
+            } catch (error) {
+                logger.error('💥 [AUTH-CONFIRM] Legacy-Flow Fehler', { error: error.message });
+                return res.redirect('/auth/login?error=Technischer Fehler bei der Bestätigung');
+            }
         }
+
+        // Keine gültigen Parameter
+        logger.warn('❌ [AUTH-CONFIRM] Keine gültigen Parameter', { query: req.query });
+        return res.redirect('/auth/login?error=Ungültiger Bestätigungslink');
+
     } catch (error) {
-        logger.error('💥 [PKCE-CONFIRM] Route unerwarteter Fehler', { error: error.message });
+        logger.error('💥 [AUTH-CONFIRM] Route unerwarteter Fehler', { error: error.message });
         return res.redirect('/auth/login?error=Technischer Fehler bei der Bestätigung');
     }
 });

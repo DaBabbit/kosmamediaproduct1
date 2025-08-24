@@ -259,8 +259,11 @@ router.post('/forgot-password', async (req, res) => {
 
         // Supabase Passwort zurücksetzen (PKCE-Flow)
         const baseUrl = process.env.SITE_URL || (req.get('host') ? `https://${req.get('host')}` : 'http://localhost:3000');
+        
+        // WICHTIG: Supabase sendet den Code als Hash-Fragment, nicht als Query-Parameter
+        // Wir müssen eine spezielle Route verwenden, die den Hash ausliest
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${baseUrl}/auth/confirm?redirectUrl=${encodeURIComponent(baseUrl + '/auth/reset-password')}`
+            redirectTo: `${baseUrl}/auth/reset-password`
         });
 
         console.log('Passwort-Reset-E-Mail gesendet an:', email);
@@ -280,181 +283,330 @@ router.post('/forgot-password', async (req, res) => {
     }
 });
 
-// GET /auth/confirm - Unterstützt beide Flows: PKCE (code) und Legacy (token_hash)
-router.get('/confirm', async (req, res) => {
-    try {
-        const { code, token_hash, type, redirectUrl } = req.query;
+// GET /auth/reset-password - Passwort zurücksetzen (Hash-Fragment-basiert)
+router.get('/reset-password', async (req, res) => {
+    logger.info('🔐 [RESET-PASSWORD] === START: Passwort-Reset-Seite geladen ===', {
+        userAgent: req.get('User-Agent'),
+        query: req.query,
+        hasQueryParams: Object.keys(req.query).length > 0,
+        queryKeys: Object.keys(req.query),
+        timestamp: new Date().toISOString()
+    });
 
-        logger.info('🔐 [AUTH-CONFIRM] Bestätigung gestartet', {
-            code: code ? 'PRESENT' : 'MISSING',
-            token_hash: token_hash ? 'PRESENT' : 'MISSING',
-            type,
-            redirectUrl,
-            userAgent: req.get('User-Agent')
+    try {
+        // SCHRITT 1: Prüfe ob wir einen Code oder Token aus der E-Mail haben
+        const { code, token_hash, type, access_token, refresh_token } = req.query;
+        
+        logger.info('🔍 [RESET-PASSWORD] SCHRITT 1: Analysiere URL-Parameter', {
+            hasCode: !!code,
+            hasTokenHash: !!token_hash,
+            hasType: !!type,
+            hasAccessToken: !!access_token,
+            hasRefreshToken: !!refresh_token,
+            type: type || 'NONE'
         });
 
-        // PKCE-Flow (mit code Parameter)
+        // SCHRITT 2: Versuche bestehende Session abzurufen
+        logger.info('🔍 [RESET-PASSWORD] SCHRITT 2: Versuche bestehende Session abzurufen...');
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        logger.info('🔍 [RESET-PASSWORD] SCHRITT 2a: getSession() Ergebnis', {
+            hasSession: !!session,
+            hasUser: !!session?.user,
+            userId: session?.user?.id || 'NONE',
+            userEmail: session?.user?.email || 'NONE',
+            error: sessionError?.message || 'NONE'
+        });
+
+        let user = null;
+
+        // SCHRITT 3: Wenn wir einen Code haben, tausche ihn gegen eine Session
         if (code) {
+            logger.info('🔍 [RESET-PASSWORD] SCHRITT 3: Code gefunden, tausche gegen Session...');
+            
             try {
-                logger.info('🔄 [AUTH-CONFIRM] PKCE-Flow gestartet');
                 const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-
-                if (error || !data?.session) {
-                    logger.error('❌ [AUTH-CONFIRM] exchangeCodeForSession fehlgeschlagen', { error: error.message });
-                    return res.redirect('/auth/login?error=Bestätigung fehlgeschlagen: ' + error.message);
-                }
-
-                if (data.session?.user) {
-                    logger.info('✅ [AUTH-CONFIRM] PKCE-Flow erfolgreich', {
-                        userId: data.session.user.id,
-                        email: data.session.user.email
+                
+                if (error) {
+                    logger.error('❌ [RESET-PASSWORD] SCHRITT 3a: exchangeCodeForSession fehlgeschlagen', { 
+                        error: error.message,
+                        errorCode: error.code || 'NO_CODE'
                     });
-
-                    // Session setzen
-                    req.session.userId = data.session.user.id;
-                    req.session.userEmail = data.session.user.email;
-                    
-                    // Weiterleitung zur Passwort-Änderungsseite mit Tokens
-                    const { access_token, refresh_token } = data.session;
-                    const finalRedirect = redirectUrl || '/auth/reset-password';
-                    
-                    logger.info('🔄 [AUTH-CONFIRM] Weiterleitung mit Tokens', { to: finalRedirect });
-                    
-                    return res.redirect(`${finalRedirect}?access_token=${access_token}&refresh_token=${refresh_token}`);
+                } else if (data?.session) {
+                    user = data.session.user;
+                    logger.info('✅ [RESET-PASSWORD] SCHRITT 3b: Session erfolgreich erstellt', { 
+                        userId: user.id, 
+                        email: user.email 
+                    });
                 }
-            } catch (error) {
-                logger.error('💥 [AUTH-CONFIRM] PKCE-Flow Fehler', { error: error.message });
-                return res.redirect('/auth/login?error=Technischer Fehler bei der Bestätigung');
+            } catch (exchangeError) {
+                logger.error('❌ [RESET-PASSWORD] SCHRITT 3c: exchangeCodeForSession Exception', { 
+                    error: exchangeError.message 
+                });
             }
         }
         
-        // Legacy-Flow (mit token_hash)
-        else if (token_hash && type === 'email') {
+        // SCHRITT 4: Wenn wir einen Token-Hash haben, verifiziere ihn
+        else if (token_hash && type === 'recovery') {
+            logger.info('🔍 [RESET-PASSWORD] SCHRITT 4: Token-Hash gefunden, verifiziere...');
+            
             try {
-                logger.info('🔄 [AUTH-CONFIRM] Legacy-Flow gestartet');
                 const { data, error } = await supabase.auth.verifyOtp({
                     token_hash,
-                    type: 'email'
+                    type: 'recovery'
                 });
-
+                
                 if (error) {
-                    logger.error('❌ [AUTH-CONFIRM] verifyOtp fehlgeschlagen', { error: error.message });
-                    return res.redirect('/auth/login?error=Bestätigung fehlgeschlagen: ' + error.message);
-                }
-
-                if (data.user) {
-                    logger.info('✅ [AUTH-CONFIRM] Legacy-Flow erfolgreich', {
-                        userId: data.user.id,
-                        email: data.user.email
+                    logger.error('❌ [RESET-PASSWORD] SCHRITT 4a: verifyOtp fehlgeschlagen', { 
+                        error: error.message 
                     });
-
-                    // Session setzen
-                    req.session.userId = data.user.id;
-                    req.session.userEmail = data.user.email;
-                    
-                    // Weiterleitung
-                    const finalRedirect = redirectUrl || '/dashboard';
-                    logger.info('🔄 [AUTH-CONFIRM] Weiterleitung', { to: finalRedirect });
-                    
-                    return res.redirect(finalRedirect);
+                } else if (data?.user) {
+                    user = data.user;
+                    logger.info('✅ [RESET-PASSWORD] SCHRITT 4b: OTP erfolgreich verifiziert', { 
+                        userId: user.id, 
+                        email: user.email 
+                    });
                 }
-            } catch (error) {
-                logger.error('💥 [AUTH-CONFIRM] Legacy-Flow Fehler', { error: error.message });
-                return res.redirect('/auth/login?error=Technischer Fehler bei der Bestätigung');
+            } catch (verifyError) {
+                logger.error('❌ [RESET-PASSWORD] SCHRITT 4c: verifyOtp Exception', { 
+                    error: verifyError.message 
+                });
+                logger.error('❌ [RESET-PASSWORD] SCHRITT 4c: verifyOtp Exception', { 
+                    error: verifyError.message 
+                });
             }
         }
-
-        // Keine gültigen Parameter
-        logger.warn('❌ [AUTH-CONFIRM] Keine gültigen Parameter', { query: req.query });
-        return res.redirect('/auth/login?error=Ungültiger Bestätigungslink');
-
-    } catch (error) {
-        logger.error('💥 [AUTH-CONFIRM] Route unerwarteter Fehler', { error: error.message });
-        return res.redirect('/auth/login?error=Technischer Fehler bei der Bestätigung');
-    }
-});
-
-
-
-// GET /auth/reset-password - Passwort zurücksetzen (mit Token)
-router.get('/reset-password', async (req, res) => {
-    try {
-        // Supabase sendet verschiedene Parameter je nach Konfiguration
-        const { token_hash, type, access_token, refresh_token, error: urlError } = req.query;
-
-        console.log('Reset-Password Query-Parameter:', req.query);
-        console.log('Alle Query-Parameter:', Object.keys(req.query));
-
-        // Prüfe verschiedene mögliche Parameter-Kombinationen
-        // Supabase kann verschiedene Parameter senden, je nach Konfiguration
-        if (token_hash || access_token || refresh_token || type === 'recovery') {
-            const resetToken = token_hash || access_token;
-
-            res.render('auth/reset-password', {
-                title: 'Passwort zurücksetzen',
-                token_hash: resetToken,
-                error: urlError || req.query.error,
-                success: req.query.success
-            });
-        } else {
-            console.log('Ungültige Reset-Parameter:', req.query);
-            res.redirect('/auth/login?error=Ungültiger Passwort-Reset-Link. Bitte verwenden Sie den Link aus der E-Mail.');
+        
+        // SCHRITT 5: Wenn wir Access/Refresh Tokens haben, setze Session
+        else if (access_token && refresh_token) {
+            logger.info('🔍 [RESET-PASSWORD] SCHRITT 5: Tokens gefunden, setze Session...');
+            
+            try {
+                const { data, error } = await supabase.auth.setSession({
+                    access_token,
+                    refresh_token
+                });
+                
+                if (error) {
+                    logger.error('❌ [RESET-PASSWORD] SCHRITT 5a: setSession fehlgeschlagen', { 
+                        error: error.message 
+                    });
+                } else if (data?.session) {
+                    user = data.session.user;
+                    logger.info('✅ [RESET-PASSWORD] SCHRITT 5b: Session erfolgreich gesetzt', { 
+                        userId: user.id, 
+                        email: user.email 
+                    });
+                }
+            } catch (setSessionError) {
+                logger.error('❌ [RESET-PASSWORD] SCHRITT 5c: setSession Exception', { 
+                    error: setSessionError.message 
+                });
+            }
         }
+        
+        // SCHRITT 5a: Wenn wir nur einen Access-Token haben (Recovery-Flow)
+        else if (access_token && type === 'recovery') {
+            logger.info('🔍 [RESET-PASSWORD] SCHRITT 5a: Recovery-Token gefunden, setze Session...');
+            
+            try {
+                // Für Recovery verwenden wir den Access-Token direkt
+                const { data, error } = await supabase.auth.setSession({
+                    access_token,
+                    refresh_token: null // Refresh-Token ist optional für Recovery
+                });
+                
+                if (error) {
+                    logger.error('❌ [RESET-PASSWORD] SCHRITT 5a: Recovery setSession fehlgeschlagen', { 
+                        error: error.message 
+                    });
+                } else if (data?.session) {
+                    user = data.session.user;
+                    logger.info('✅ [RESET-PASSWORD] SCHRITT 5a: Recovery-Session erfolgreich gesetzt', { 
+                        userId: user.id, 
+                        email: user.email 
+                    });
+                }
+            } catch (setSessionError) {
+                logger.error('❌ [RESET-PASSWORD] SCHRITT 5a: Recovery setSession Exception', { 
+                    error: setSessionError.message 
+                });
+            }
+        }
+        
+        // SCHRITT 6: Wenn wir eine bestehende Session haben, verwende sie
+        else if (session?.user) {
+            logger.info('🔍 [RESET-PASSWORD] SCHRITT 6: Bestehende Session gefunden');
+            user = session.user;
+        }
+
+        // SCHRITT 7: Überprüfe ob wir einen User haben
+        if (!user) {
+            logger.warn('❌ [RESET-PASSWORD] SCHRITT 7: Kein User gefunden', {
+                triedCode: !!code,
+                triedTokenHash: !!token_hash,
+                triedTokens: !!(access_token && refresh_token),
+                hadExistingSession: !!session?.user
+            });
+            
+            // SCHRITT 7a: Rendere eine Seite, die den Hash-Fragment ausliest
+            logger.info('🔍 [RESET-PASSWORD] SCHRITT 7a: Rendere Hash-Fragment-Seite...');
+            return res.render('auth/reset-password', { 
+                error: null,
+                email: null,
+                success: null,
+                showHashExtractor: true
+            });
+        }
+
+        // SCHRITT 8: User erfolgreich authentifiziert
+        logger.info('✅ [RESET-PASSWORD] SCHRITT 8: User erfolgreich authentifiziert', { 
+            userId: user.id, 
+            email: user.email,
+            authMethod: code ? 'CODE' : token_hash ? 'TOKEN_HASH' : access_token ? 'TOKENS' : 'EXISTING_SESSION'
+        });
+        
+        // SCHRITT 9: Express-Session setzen
+        logger.info('🔍 [RESET-PASSWORD] SCHRITT 9: Setze Express-Session...', {
+            oldUserId: req.session.userId || 'NONE',
+            oldUserEmail: req.session.userEmail || 'NONE'
+        });
+        
+        req.session.userId = user.id;
+        req.session.userEmail = user.email;
+        
+        logger.info('✅ [RESET-PASSWORD] SCHRITT 10: Express-Session gesetzt', { 
+            newUserId: req.session.userId,
+            newUserEmail: req.session.userEmail,
+            sessionId: req.sessionID
+        });
+        
+        // SCHRITT 11: Passwort-Reset-Seite rendern
+        logger.info('✅ [RESET-PASSWORD] SCHRITT 11: Rendere Passwort-Reset-Seite', { 
+            email: user.email,
+            willRender: true
+        });
+        
+        return res.render('auth/reset-password', { 
+            error: null,
+            email: user.email,
+            success: null,
+            showHashExtractor: false,
+            access_token: access_token || null,
+            refresh_token: refresh_token || null
+        });
+
     } catch (error) {
-        console.error('Passwort-Reset Route Fehler:', error);
-        res.redirect('/auth/login?error=Ein Fehler ist aufgetreten');
+        logger.error('💥 [RESET-PASSWORD] SCHRITT X: Route unerwarteter Fehler', { 
+            error: error.message,
+            errorStack: error.stack,
+            errorType: typeof error,
+            timestamp: new Date().toISOString()
+        });
+        return res.render('auth/reset-password', { 
+            error: `SCHRITT X FEHLGESCHLAGEN: Technischer Fehler. Bitte versuchen Sie es erneut. Fehler: ${error.message}`,
+            email: null,
+            success: null,
+            showHashExtractor: true,
+            access_token: null,
+            refresh_token: null
+        });
     }
 });
 
 // POST /auth/reset-password - Neues Passwort setzen
 router.post('/reset-password', async (req, res) => {
+    const { password, access_token, refresh_token } = req.body;
+    
+    logger.info('🔐 [RESET-PASSWORD] Passwort-Update gestartet', {
+        hasPassword: !!password,
+        hasAccessToken: !!access_token,
+        hasRefreshToken: !!refresh_token
+    });
+
+    if (!password || password.length < 6) {
+        return res.render('auth/reset-password', { 
+            error: 'Passwort muss mindestens 6 Zeichen lang sein.',
+            email: req.body.email || null
+        });
+    }
+
     try {
-        const { password, confirmPassword, token_hash } = req.body;
+        // PKCE-Flow (mit Tokens)
+        if (access_token && refresh_token) {
+            logger.info('🔄 [RESET-PASSWORD] PKCE-Flow Passwort-Update');
+            
+            // Session wiederherstellen
+            const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
+                access_token,
+                refresh_token
+            });
 
-        if (!password || !confirmPassword || !token_hash) {
-            return res.redirect('/auth/reset-password?error=Bitte füllen Sie alle Felder aus');
+            if (sessionError || !sessionData?.session) {
+                logger.error('❌ [RESET-PASSWORD] Session-Wiederherstellung fehlgeschlagen', { error: sessionError?.message });
+                return res.render('auth/reset-password', { 
+                    error: 'Sitzung konnte nicht wiederhergestellt werden. Bitte fordern Sie einen neuen Link an.',
+                    email: req.body.email || null
+                });
+            }
+
+            // Passwort aktualisieren
+            const { data, error } = await supabase.auth.updateUser({
+                password: password
+            });
+
+            if (error) {
+                logger.error('❌ [RESET-PASSWORD] updateUser fehlgeschlagen', { error: error.message });
+                return res.render('auth/reset-password', { 
+                    error: 'Passwort konnte nicht aktualisiert werden: ' + error.message,
+                    email: req.body.email || null
+                });
+            }
+
+            logger.info('✅ [RESET-PASSWORD] Passwort erfolgreich aktualisiert (PKCE)', { userId: data.user.id });
+        }
+        
+        // Legacy-Flow (mit Session)
+        else if (req.session.userId) {
+            logger.info('🔄 [RESET-PASSWORD] Legacy-Flow Passwort-Update');
+            
+            // Passwort aktualisieren
+            const { data, error } = await supabase.auth.updateUser({
+                password: password
+            });
+
+            if (error) {
+                logger.error('❌ [RESET-PASSWORD] updateUser fehlgeschlagen', { error: error.message });
+                return res.render('auth/reset-password', { 
+                    error: 'Passwort konnte nicht aktualisiert werden: ' + error.message,
+                    email: req.body.email || null
+                });
+            }
+
+            logger.info('✅ [RESET-PASSWORD] Passwort erfolgreich aktualisiert (Legacy)', { userId: data.user.id });
+        }
+        
+        else {
+            logger.error('❌ [RESET-PASSWORD] Keine gültige Session oder Tokens');
+            return res.render('auth/reset-password', { 
+                error: 'Keine gültige Sitzung. Bitte fordern Sie einen neuen Link an.',
+                email: req.body.email || null
+            });
         }
 
-        if (password !== confirmPassword) {
-            return res.redirect('/auth/reset-password?error=Passwörter stimmen nicht überein');
-        }
-
-        if (password.length < 6) {
-            return res.redirect('/auth/reset-password?error=Das Passwort muss mindestens 6 Zeichen lang sein');
-        }
-
-        // Zuerst den Recovery-Token verifizieren und verwenden
-        const { data, error } = await supabase.auth.verifyOtp({
-            token_hash,
-            type: 'recovery'
-        });
-
-        if (error) {
-            console.error('Token-Verifikation Fehler:', error.message);
-            return res.redirect('/auth/reset-password?error=Ungültiger oder abgelaufener Reset-Link&token_hash=' + token_hash);
-        }
-
-        // Jetzt das Passwort aktualisieren
-        const { data: updateData, error: updateError } = await supabase.auth.updateUser({
-            password: password
-        });
-
-        if (updateError) {
-            console.error('Passwort-Update Fehler:', updateError.message);
-            return res.redirect('/auth/reset-password?error=Passwort konnte nicht zurückgesetzt werden&token_hash=' + token_hash);
-        }
-
-        if (updateData.user) {
-            console.log(`✅ Passwort für ${updateData.user.email} erfolgreich zurückgesetzt`);
-            res.redirect('/auth/login?success=Passwort erfolgreich zurückgesetzt! Sie können sich jetzt anmelden.');
-        } else {
-            res.redirect('/auth/reset-password?error=Passwort-Reset fehlgeschlagen&token_hash=' + token_hash);
-        }
+        // Erfolg: Weiterleitung zum Dashboard
+        logger.info('🎉 [RESET-PASSWORD] Passwort-Reset erfolgreich abgeschlossen');
+        return res.redirect('/dashboard?success=Passwort wurde erfolgreich geändert');
 
     } catch (error) {
-        console.error('Passwort-Reset POST Route Fehler:', error);
-        res.redirect('/auth/reset-password?error=Ein Fehler ist aufgetreten');
+        logger.error('💥 [RESET-PASSWORD] Route unerwarteter Fehler', { error: error.message });
+        return res.render('auth/reset-password', { 
+            error: 'Technischer Fehler beim Aktualisieren des Passworts. Bitte versuchen Sie es erneut.',
+            email: req.body.email || null
+        });
     }
 });
 
 module.exports = router;
+
+
